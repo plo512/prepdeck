@@ -1,0 +1,1277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0d6e6e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PrepDeck">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Interview Prep Deck</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one-screen app. Sticky header, scrolling content column (max 680px), fixed bottom tab bar. */
+:root{
+  --bg:#eef2f1; --surface:#ffffff; --sunk:#e3e9e7; --line:#cfd8d5;
+  --fg:#15211f; --muted:#56635f; --accent:#0d6e6e; --accent-ink:#ffffff; --accent-soft:#d5ebe9;
+  --ok:#2c7a43; --warn:#b07408; --bad:#b8402a; --ok-soft:#dcefe1; --warn-soft:#f6e8c8; --bad-soft:#f5dcd5;
+  --code-bg:#14201e; --code-fg:#dbe7e3;
+  --display:'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --body:'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+  --mono:'JetBrains Mono', ui-monospace, Consolas, monospace;
+  --r:12px; --tabh:64px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f1716; --surface:#172220; --sunk:#1e2b29; --line:#2c3c39;
+  --fg:#e3ece9; --muted:#97a8a3; --accent:#4fbcb6; --accent-ink:#06201f; --accent-soft:#16393a;
+  --ok:#5cc27a; --warn:#e2a73a; --bad:#ef7b62; --ok-soft:#173523; --warn-soft:#3a2e12; --bad-soft:#3d1d17;
+  --code-bg:#0a1110; --code-fg:#d6e4e0; color-scheme:dark }}
+:root[data-theme="dark"]{
+  --bg:#0f1716; --surface:#172220; --sunk:#1e2b29; --line:#2c3c39;
+  --fg:#e3ece9; --muted:#97a8a3; --accent:#4fbcb6; --accent-ink:#06201f; --accent-soft:#16393a;
+  --ok:#5cc27a; --warn:#e2a73a; --bad:#ef7b62; --ok-soft:#173523; --warn-soft:#3a2e12; --bad-soft:#3d1d17;
+  --code-bg:#0a1110; --code-fg:#d6e4e0; color-scheme:dark }
+
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+  padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top-in{max-width:680px;margin:0 auto;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.brand{font-family:var(--display);font-weight:800;font-size:20px;letter-spacing:-.01em}
+.brand span{color:var(--accent)}
+.sync{font-size:12px;color:var(--muted);white-space:nowrap}
+
+main{padding-block:16px calc(var(--tabh) + 28px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,h3{font-family:var(--display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:28px;font-weight:800;letter-spacing:-.015em}
+h2{font-size:21px;font-weight:600}
+h3{font-size:17px;font-weight:600}
+p{margin:0}
+.lede{color:var(--muted)}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px);padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+.tabs-in{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);height:var(--tabh)}
+.tabs a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;color:var(--muted);font-size:13px;font-weight:700}
+.tabs a svg{width:22px;height:22px}
+.tabs a[aria-current="page"]{color:var(--accent)}
+
+.seg{display:flex;background:var(--sunk);border-radius:999px;padding:4px;gap:4px}
+.seg button{flex:1;border:0;background:transparent;border-radius:999px;padding:8px 6px;font-weight:700;font-size:14px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:0 1px 2px rgb(0 0 0 / .12)}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:700;color:var(--muted)}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;font-weight:700;min-height:44px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.row.spread{justify-content:space-between}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:var(--sunk);color:var(--muted)}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+
+/* list rows */
+.list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--r);background:var(--surface);overflow:hidden}
+.item{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:12px 14px;border:0;border-top:1px solid var(--line);background:transparent;text-align:left;width:100%}
+.item:first-child{border-top:0}
+.item .t{font-weight:700;min-width:0}
+.item .s{font-size:13px;color:var(--muted)}
+.mark{width:24px;height:24px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:700}
+.mark.done{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.mark.peek{border-color:var(--warn);color:var(--warn)}
+.lv{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.1em}
+
+/* editor */
+.prompt{font-size:17px}
+.kbar{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.kbar::-webkit-scrollbar{display:none}
+.kbar button{flex:none;font-family:var(--mono);font-size:12px;border:1px solid var(--line);background:var(--sunk);border-radius:8px;padding:6px 8px}
+textarea.code{width:100%;min-height:190px;resize:vertical;font-family:var(--mono);font-size:16px;line-height:1.45;background:var(--code-bg);color:var(--code-fg);
+  border:1px solid var(--line);border-radius:10px;padding:12px;tab-size:2;box-sizing:border-box}
+pre.code{margin:0;font-family:var(--mono);font-size:13px;line-height:1.5;background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:12px;overflow-x:auto;white-space:pre}
+.result{overflow-x:auto;border:1px solid var(--line);border-radius:10px;max-height:320px;overflow-y:auto}
+table{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;width:max-content;min-width:100%}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{position:sticky;top:0;background:var(--sunk);font-weight:700}
+td.num{text-align:right}
+td.null{color:var(--muted);font-style:italic}
+.note{border-radius:10px;padding:10px 12px;font-size:15px}
+.note.ok{background:var(--ok-soft);color:var(--ok)}
+.note.bad{background:var(--bad-soft);color:var(--bad)}
+.note.warn{background:var(--warn-soft);color:var(--warn)}
+.note.info{background:var(--accent-soft);color:var(--fg)}
+details{border-top:1px solid var(--line);padding-top:10px}
+summary{font-weight:700;cursor:pointer}
+details > *:not(summary){margin-top:8px}
+
+/* flashcards */
+.flash{min-height:180px;justify-content:center}
+.flash .q{font-family:var(--display);font-size:21px;font-weight:600;line-height:1.25}
+.flash .a{border-top:1px dashed var(--line);padding-top:12px}
+
+/* interview */
+.qcard .q{font-family:var(--display);font-size:24px;font-weight:600;line-height:1.2;letter-spacing:-.01em}
+.beats{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
+.dial{display:grid;place-items:center;position:relative;margin:4px auto 0;width:min(260px,72vw);aspect-ratio:1;max-width:100%}
+.dial svg{width:100%;height:100%;display:block}
+.dial .read{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.dial .time{font-family:var(--mono);font-size:44px;font-weight:600;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.dial .phase{font-weight:700;font-size:14px}
+.ring-track{stroke:var(--sunk)}
+.ring-tick{stroke:var(--muted)}
+.ring-fill{transition:stroke .3s}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rate button{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 4px;font-weight:700;min-height:44px}
+.rate button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+input.text{width:100%;box-sizing:border-box;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 12px;font-size:16px}
+.hist{display:flex;flex-direction:column;gap:6px}
+.hist div{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-variant-numeric:tabular-nums}
+
+/* quiz */
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px;text-align:left;font-size:16px;min-height:48px}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.bar{height:8px;background:var(--sunk);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:999px}
+
+/* progress */
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat b{font-family:var(--display);font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;color:var(--muted)}
+.metric{display:grid;grid-template-columns:minmax(0,1fr) 120px 44px;gap:10px;align-items:center;font-size:14px}
+.metric em{font-style:normal;text-align:right;font-variant-numeric:tabular-nums;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top"><div class="top-in"><div class="brand">Prep<span>Deck</span></div><div class="sync" id="sync">Saved on this device</div></div></header>
+<main><div class="wrap" id="view"></div></main>
+<nav class="tabs" aria-label="Sections"><div class="tabs-in">
+  <a href="#sql" data-tab="sql"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>SQL</a>
+  <a href="#interview" data-tab="interview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg>Interview</a>
+  <a href="#quiz" data-tab="quiz"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Quiz</a>
+  <a href="#progress" data-tab="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Progress</a>
+</div></nav>
+
+<script>
+// ---------- Practice database (Chipply-style marketplace) ----------
+function buildPracticeSQL(){
+  let s = 20260917;
+  const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  const pick = a => a[Math.floor(rnd() * a.length)];
+  const pad = n => String(n).padStart(2, '0');
+  const q = v => v === null ? 'NULL' : (typeof v === 'number' ? v : "'" + String(v).replace(/'/g, "''") + "'");
+  const ins = (t, rows) => rows.map(r => `INSERT INTO ${t} VALUES (${r.map(q).join(',')});`).join('\n');
+  const addDays = (iso, d) => { const x = new Date(iso + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + d); return x.toISOString().slice(0, 10); };
+
+  const dealers = [
+    [1,'Badger Team Sports','WI','Gold'],[2,'Lakeshore Athletics','IL','Gold'],[3,'Prairie Spirit Wear','IA','Silver'],
+    [4,'Gulf Coast Apparel','FL','Silver'],[5,'Mesa Uniform Co','AZ','Bronze'],[6,'Granite State Gear','NH','Silver'],
+    [7,'Cascade Embroidery','OR','Bronze'],[8,'Tidewater Promo','VA','Bronze']
+  ];
+  const storeNames = ['Westside HS Booster','Oakwood Youth Soccer','Riverside Swim Club','St. Mark Parish','Lincoln Elem PTO',
+    'Northfield Hockey','Summit Running Club','Bayview Lacrosse','Pinecrest Band','Eastgate Volleyball','Harbor Rowing',
+    'Valley Wrestling','Maple Grove Softball','Canyon Climbing Gym','Hillcrest Robotics','Coastal Cheer','Ironwood Crossfit',
+    'Meadow Lane Daycare','Desert Sun Pickleball','Old Mill Fire Dept'];
+  const dealerRegion = {1:'Midwest',2:'Midwest',3:'Midwest',4:'South',5:'West',6:'Northeast',7:'West'};
+  const storeDealer = [1,1,1,2,2,2,3,3,4,4,4,4,5,5,6,6,7,7,5,6];
+  const stores = storeNames.map((n, i) => {
+    const d = storeDealer[i];
+    return [i + 1, n, d, dealerRegion[d], '2025-' + pad(1 + (i % 6)) + '-' + pad(3 + i)];
+  });
+
+  const first = ['ana','ben','cara','dev','eli','fay','gus','hana','ivan','jo','kai','lena','mo','nia','omar','pia','quinn','rui','sam','tess'];
+  const last = ['silva','moore','khan','lee','ortiz','berg','nash','reyes','park','cole','dunn','frost'];
+  const customers = []; const seen = new Set();
+  while (customers.length < 60) {
+    const e = pick(first) + '.' + pick(last) + '@mail.com';
+    if (seen.has(e)) continue; seen.add(e);
+    const d = addDays('2025-06-01', Math.floor(rnd() * 300));
+    customers.push([customers.length + 1, e, d, pick(['WI','IL','FL','AZ','OR','NH','IA'])]);
+  }
+  // duplicate sign-ups with different letter case, always later than the original
+  [3, 11, 19, 27, 38, 52].forEach(i => {
+    const c = customers[i - 1];
+    customers.push([customers.length + 1, c[1].replace(/^./, ch => ch.toUpperCase()), addDays(c[2], 20 + i), c[3]]);
+  });
+
+  const orders = []; let oid = 1000;
+  const storeWeight = stores.map((st, i) => i === 19 ? 0 : (i === 4 ? 1.1 : 0.6 + rnd() * 1.6));
+  const tw = storeWeight.reduce((a, b) => a + b, 0);
+  const pickStore = () => { let r = rnd() * tw; for (let i = 0; i < storeWeight.length; i++) { r -= storeWeight[i]; if (r <= 0) return i + 1; } return 1; };
+  for (let k = 0; k < 420; k++) {
+    let st = pickStore(); if (st === 20) st = 1;
+    const c = customers[Math.floor(rnd() * 60)];
+    let d = addDays('2025-07-01', Math.floor(rnd() * 365));
+    if (d < c[2]) d = addDays(c[2], Math.floor(rnd() * 25));
+    if (d > '2026-06-30') d = '2026-06-' + pad(10 + Math.floor(rnd() * 20));
+    if (st === 5 && ['2025-09','2025-10','2026-01','2026-04'].includes(d.slice(0, 7))) st = 6;
+    const r = rnd();
+    const status = r < 0.8 ? 'completed' : (r < 0.88 ? 'refunded' : 'cancelled');
+    const gmv = status === 'cancelled' ? null : Math.round((40 + rnd() * rnd() * 520) * 100) / 100;
+    orders.push([oid++, st, c[0], d, status, gmv]);
+  }
+
+  const owners = ['Ana','Ben','Cara','Dev'];
+  const deals = [];
+  for (let k = 1; k <= 40; k++) {
+    const created = addDays('2025-08-01', Math.floor(rnd() * 300));
+    const r = rnd(); const ow = owners[k % 4];
+    const winBias = { Ana: 0.15, Ben: 0, Cara: -0.12, Dev: 0.05 }[ow];
+    const stage = r < 0.2 ? 'open' : (rnd() < 0.5 + winBias ? 'closedwon' : 'closedlost');
+    deals.push([k, 1 + (k % 8), ow, stage, Math.round(2000 + rnd() * 18000), created, stage === 'open' ? null : addDays(created, 10 + Math.floor(rnd() * 60))]);
+  }
+
+  return `
+CREATE TABLE dealers (dealer_id INTEGER PRIMARY KEY, dealer_name TEXT, state TEXT, tier TEXT);
+CREATE TABLE stores (store_id INTEGER PRIMARY KEY, store_name TEXT, dealer_id INTEGER REFERENCES dealers(dealer_id), region TEXT, launched_on TEXT);
+CREATE TABLE customers (customer_id INTEGER PRIMARY KEY, email TEXT, signup_date TEXT, state TEXT);
+CREATE TABLE orders (order_id INTEGER PRIMARY KEY, store_id INTEGER REFERENCES stores(store_id), customer_id INTEGER REFERENCES customers(customer_id), order_date TEXT, status TEXT, gmv REAL);
+CREATE TABLE deals (deal_id INTEGER PRIMARY KEY, dealer_id INTEGER REFERENCES dealers(dealer_id), owner TEXT, stage TEXT, amount REAL, created_on TEXT, closed_on TEXT);
+${ins('dealers', dealers)}
+${ins('stores', stores)}
+${ins('customers', customers)}
+${ins('orders', orders)}
+${ins('deals', deals)}
+`;
+}
+
+const SCHEMA_DOC = [
+  ['dealers', 'dealer_id, dealer_name, state, tier', '8 dealers. Tidewater Promo has no stores.'],
+  ['stores', 'store_id, store_name, dealer_id, region, launched_on', '20 team stores. Old Mill Fire Dept has no orders.'],
+  ['customers', 'customer_id, email, signup_date, state', '66 rows. A few people signed up twice with different letter case.'],
+  ['orders', 'order_id, store_id, customer_id, order_date, status, gmv', 'Jul 2025 to Jun 2026. status: completed, refunded, cancelled. Cancelled orders carry NULL gmv.'],
+  ['deals', 'deal_id, dealer_id, owner, stage, amount, created_on, closed_on', 'HubSpot-style pipeline. stage: open, closedwon, closedlost.']
+];
+
+// ---------- Graded exercises ----------
+const EXERCISES = [
+  { id:'gmv-by-dealer', cat:'Joins & aggregation', level:1, ordered:true,
+    title:'GMV by dealer',
+    prompt:'Return each dealer_name and its total GMV from completed orders. Sort highest GMV first. Leave out dealers with no completed orders.',
+    hint:'orders joins to stores on store_id, stores joins to dealers on dealer_id. Filter status in WHERE, then GROUP BY the dealer.',
+    solution:`SELECT d.dealer_name,
+       ROUND(SUM(o.gmv), 2) AS total_gmv
+FROM orders o
+JOIN stores s  ON s.store_id = o.store_id
+JOIN dealers d ON d.dealer_id = s.dealer_id
+WHERE o.status = 'completed'
+GROUP BY d.dealer_name
+ORDER BY total_gmv DESC;`,
+    explain:'Inner joins drop anything without a match, which suits this ask. The WHERE filter runs before GROUP BY, so refunded and cancelled rows never reach the SUM.' },
+
+  { id:'stores-no-orders', cat:'Joins & aggregation', level:1, ordered:false,
+    title:'Stores with zero orders',
+    prompt:'Return the store_name of every store that has never received an order of any status.',
+    hint:'LEFT JOIN orders onto stores and keep the rows where the order side came back NULL. NOT EXISTS works too.',
+    solution:`SELECT s.store_name
+FROM stores s
+LEFT JOIN orders o ON o.store_id = s.store_id
+WHERE o.order_id IS NULL;`,
+    explain:'This is the anti-join pattern. A LEFT JOIN keeps every store; stores with no match get NULLs in the order columns, and the WHERE keeps only those. Test a column that cannot be NULL on a real match, such as the primary key.' },
+
+  { id:'dealer-store-count', cat:'Joins & aggregation', level:1, ordered:false,
+    title:'Store count per dealer, zeros included',
+    prompt:'Return every dealer_name with its number of stores. Dealers with no stores must show 0.',
+    hint:'LEFT JOIN from dealers. Think about what COUNT(*) does on a row the LEFT JOIN padded with NULLs.',
+    solution:`SELECT d.dealer_name,
+       COUNT(s.store_id) AS store_count
+FROM dealers d
+LEFT JOIN stores s ON s.dealer_id = d.dealer_id
+GROUP BY d.dealer_name;`,
+    explain:'COUNT(*) counts the padded row and reports 1 for a dealer with no stores. COUNT(s.store_id) skips NULLs and reports 0. Interviewers love this trap.' },
+
+  { id:'status-null-counts', cat:'Joins & aggregation', level:1, ordered:false,
+    title:'COUNT(*) vs COUNT(column)',
+    prompt:'For each order status, return status, the total number of orders, the number of orders with a non-NULL gmv, and the average gmv.',
+    hint:'One GROUP BY status. Use COUNT(*), COUNT(gmv) and AVG(gmv) side by side.',
+    solution:`SELECT status,
+       COUNT(*)            AS orders,
+       COUNT(gmv)          AS orders_with_gmv,
+       ROUND(AVG(gmv), 2)  AS avg_gmv
+FROM orders
+GROUP BY status;`,
+    explain:'Aggregates other than COUNT(*) ignore NULLs. The cancelled group shows a count but 0 rows with gmv and a NULL average. AVG divides by non-NULL rows, which can quietly inflate an average if you expected NULLs to count as zero.' },
+
+  { id:'having-busy-stores', cat:'Joins & aggregation', level:2, ordered:true,
+    title:'Busy stores with HAVING',
+    prompt:'Return store_name, number of completed orders, and average completed order value for stores with at least 20 completed orders. Sort by order count, highest first.',
+    hint:'WHERE filters rows before grouping. HAVING filters groups after aggregation.',
+    solution:`SELECT s.store_name,
+       COUNT(*)              AS completed_orders,
+       ROUND(AVG(o.gmv), 2)  AS avg_order_value
+FROM orders o
+JOIN stores s ON s.store_id = o.store_id
+WHERE o.status = 'completed'
+GROUP BY s.store_name
+HAVING COUNT(*) >= 20
+ORDER BY completed_orders DESC;`,
+    explain:'You cannot reference COUNT(*) in WHERE because WHERE runs before grouping. Logical order: FROM/JOIN, WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT.' },
+
+  { id:'monthly-region', cat:'Joins & aggregation', level:2, ordered:true,
+    title:'Monthly GMV by region',
+    prompt:'Return month (YYYY-MM), region, and completed GMV. Sort by month, then region.',
+    hint:"SQLite: strftime('%Y-%m', order_date) or substr(order_date, 1, 7). Postgres would use date_trunc or to_char.",
+    solution:`SELECT strftime('%Y-%m', o.order_date) AS month,
+       s.region,
+       ROUND(SUM(o.gmv), 2) AS gmv
+FROM orders o
+JOIN stores s ON s.store_id = o.store_id
+WHERE o.status = 'completed'
+GROUP BY month, s.region
+ORDER BY month, s.region;`,
+    explain:'Group by every non-aggregated column in SELECT. SQLite and Postgres both let you GROUP BY a SELECT alias; SQL Server does not, so there you repeat the expression.' },
+
+  { id:'rank-in-region', cat:'Window functions', level:2, ordered:false,
+    title:'Rank stores inside each region',
+    prompt:'Return region, store_name, completed GMV, and a dense rank of that GMV within the region (1 = highest). Include only stores with completed orders.',
+    hint:'Aggregate first (CTE or subquery), then apply DENSE_RANK() OVER (PARTITION BY region ORDER BY gmv DESC).',
+    solution:`WITH store_gmv AS (
+  SELECT s.region, s.store_name, SUM(o.gmv) AS gmv
+  FROM orders o
+  JOIN stores s ON s.store_id = o.store_id
+  WHERE o.status = 'completed'
+  GROUP BY s.region, s.store_name
+)
+SELECT region, store_name, ROUND(gmv, 2) AS gmv,
+       DENSE_RANK() OVER (PARTITION BY region ORDER BY gmv DESC) AS region_rank
+FROM store_gmv;`,
+    explain:'PARTITION BY restarts the ranking for each region. You can also nest the window over an aggregate in one SELECT: DENSE_RANK() OVER (PARTITION BY region ORDER BY SUM(gmv) DESC), since windows run after GROUP BY.' },
+
+  { id:'top2-per-region', cat:'Window functions', level:2, ordered:false,
+    title:'Top 2 stores per region',
+    prompt:'Return region, store_name and completed GMV for the two highest-GMV stores in each region.',
+    hint:'Number rows with ROW_NUMBER() inside a CTE, then filter on that number in the outer query. You cannot filter a window function in WHERE.',
+    solution:`WITH store_gmv AS (
+  SELECT s.region, s.store_name, SUM(o.gmv) AS gmv
+  FROM orders o
+  JOIN stores s ON s.store_id = o.store_id
+  WHERE o.status = 'completed'
+  GROUP BY s.region, s.store_name
+), ranked AS (
+  SELECT *, ROW_NUMBER() OVER (PARTITION BY region ORDER BY gmv DESC) AS rn
+  FROM store_gmv
+)
+SELECT region, store_name, ROUND(gmv, 2) AS gmv
+FROM ranked
+WHERE rn <= 2;`,
+    explain:'Top-N per group is the most asked window question. ROW_NUMBER gives exactly N rows; RANK or DENSE_RANK can return more when values tie. Say which one you picked and why.' },
+
+  { id:'running-total', cat:'Window functions', level:2, ordered:true,
+    title:'Running total by month',
+    prompt:'Return month (YYYY-MM), completed GMV for that month, and the cumulative GMV through that month. Sort by month.',
+    hint:'Aggregate to one row per month first, then SUM(gmv) OVER (ORDER BY month).',
+    solution:`WITH monthly AS (
+  SELECT strftime('%Y-%m', order_date) AS month, SUM(gmv) AS gmv
+  FROM orders
+  WHERE status = 'completed'
+  GROUP BY month
+)
+SELECT month,
+       ROUND(gmv, 2) AS gmv,
+       ROUND(SUM(gmv) OVER (ORDER BY month
+             ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 2) AS running_gmv
+FROM monthly
+ORDER BY month;`,
+    explain:'With ORDER BY and no frame, the default frame is RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW. RANGE treats tied ORDER BY values as one peer group, so duplicate dates jump together. ROWS counts physical rows. Name the frame when it matters.' },
+
+  { id:'mom-change', cat:'Window functions', level:2, ordered:true,
+    title:'Month-over-month change with LAG',
+    prompt:'Return month, completed GMV, the previous month GMV, and the dollar change from the previous month. The first month shows NULL for the last two columns.',
+    hint:'LAG(gmv) OVER (ORDER BY month) reads the prior row.',
+    solution:`WITH monthly AS (
+  SELECT strftime('%Y-%m', order_date) AS month, SUM(gmv) AS gmv
+  FROM orders
+  WHERE status = 'completed'
+  GROUP BY month
+)
+SELECT month,
+       ROUND(gmv, 2) AS gmv,
+       ROUND(LAG(gmv) OVER (ORDER BY month), 2) AS prev_gmv,
+       ROUND(gmv - LAG(gmv) OVER (ORDER BY month), 2) AS change
+FROM monthly
+ORDER BY month;`,
+    explain:'LAG looks back, LEAD looks ahead. Both take an offset and a default: LAG(gmv, 1, 0). For percent change, divide by NULLIF(prev, 0) so a zero month does not throw a divide-by-zero.' },
+
+  { id:'days-to-second', cat:'Window functions', level:3, ordered:false,
+    title:'Days from first to second order',
+    prompt:'For every customer with at least two orders (any status), return customer_id, first order date, second order date, and the whole number of days between them. Break same-day ties by order_id.',
+    hint:'ROW_NUMBER() per customer ordered by order_date, order_id. Then either self-join rn = 1 to rn = 2, or use LEAD in the same step and keep rn = 1.',
+    solution:`WITH seq AS (
+  SELECT customer_id, order_date,
+         ROW_NUMBER() OVER (PARTITION BY customer_id ORDER BY order_date, order_id) AS rn,
+         LEAD(order_date) OVER (PARTITION BY customer_id ORDER BY order_date, order_id) AS next_date
+  FROM orders
+)
+SELECT customer_id,
+       order_date AS first_order,
+       next_date  AS second_order,
+       CAST(julianday(next_date) - julianday(order_date) AS INTEGER) AS days_between
+FROM seq
+WHERE rn = 1 AND next_date IS NOT NULL;`,
+    explain:'Time-to-second-purchase is a classic retention metric. The tie-breaker keeps the result deterministic. Date math differs by engine: julianday in SQLite, date subtraction in Postgres, DATEDIFF in SQL Server.' },
+
+  { id:'share-of-region', cat:'Window functions', level:3, ordered:false,
+    title:'Share of region GMV',
+    prompt:'Return region, store_name, completed GMV, and that store share of its region total as a percent rounded to 1 decimal.',
+    hint:'A window SUM with PARTITION BY region and no ORDER BY gives the region total on every row.',
+    solution:`WITH store_gmv AS (
+  SELECT s.region, s.store_name, SUM(o.gmv) AS gmv
+  FROM orders o
+  JOIN stores s ON s.store_id = o.store_id
+  WHERE o.status = 'completed'
+  GROUP BY s.region, s.store_name
+)
+SELECT region, store_name, ROUND(gmv, 2) AS gmv,
+       ROUND(100.0 * gmv / SUM(gmv) OVER (PARTITION BY region), 1) AS pct_of_region
+FROM store_gmv;`,
+    explain:'A window aggregate keeps every row, unlike GROUP BY. Multiply by 100.0, not 100, so integer columns do not trigger integer division in engines that truncate.' },
+
+  { id:'dedupe-customers', cat:'CTEs & subqueries', level:2, ordered:false,
+    title:'Deduplicate customers',
+    prompt:'Some people signed up twice with emails that differ only in letter case. Return customer_id and signup_date of the earliest sign-up for each distinct email, one row per person.',
+    hint:'ROW_NUMBER() OVER (PARTITION BY LOWER(email) ORDER BY signup_date) inside a CTE, keep rn = 1.',
+    solution:`WITH ranked AS (
+  SELECT customer_id, signup_date,
+         ROW_NUMBER() OVER (PARTITION BY LOWER(email)
+                            ORDER BY signup_date, customer_id) AS rn
+  FROM customers
+)
+SELECT customer_id, signup_date
+FROM ranked
+WHERE rn = 1;`,
+    explain:'The dedupe pattern: partition by the natural key, order by the rule that picks the survivor, keep row 1. Normalize the key (LOWER, TRIM) before partitioning.' },
+
+  { id:'beat-region-avg', cat:'CTEs & subqueries', level:2, ordered:false,
+    title:'Stores above their region average',
+    prompt:'Return store_name and region for stores whose completed GMV beats the average completed GMV of stores in the same region.',
+    hint:'Build store totals in a CTE. Then compare each row with AVG(gmv) for its region, through a correlated subquery or a window AVG.',
+    solution:`WITH store_gmv AS (
+  SELECT s.store_name, s.region, SUM(o.gmv) AS gmv
+  FROM orders o
+  JOIN stores s ON s.store_id = o.store_id
+  WHERE o.status = 'completed'
+  GROUP BY s.store_name, s.region
+)
+SELECT store_name, region
+FROM store_gmv a
+WHERE gmv > (SELECT AVG(b.gmv) FROM store_gmv b WHERE b.region = a.region);`,
+    explain:'A correlated subquery references the outer row (a.region) and re-runs per row. Many engines rewrite it as a join, but the window version, AVG(gmv) OVER (PARTITION BY region), reads the data once and scales better.' },
+
+  { id:'cohort-repeat', cat:'CTEs & subqueries', level:3, ordered:true,
+    title:'Signup cohort repeat rate',
+    prompt:'Using the raw customers table, return signup month (YYYY-MM), customers who signed up that month, and how many of them placed 2 or more completed orders. Sort by month.',
+    hint:'Count completed orders per customer in a CTE. LEFT JOIN it to customers so people with zero orders still count in the denominator.',
+    solution:`WITH per_customer AS (
+  SELECT customer_id, COUNT(*) AS completed
+  FROM orders
+  WHERE status = 'completed'
+  GROUP BY customer_id
+)
+SELECT strftime('%Y-%m', c.signup_date) AS signup_month,
+       COUNT(*) AS signed_up,
+       SUM(CASE WHEN p.completed >= 2 THEN 1 ELSE 0 END) AS repeaters
+FROM customers c
+LEFT JOIN per_customer p ON p.customer_id = c.customer_id
+GROUP BY signup_month
+ORDER BY signup_month;`,
+    explain:'Conditional aggregation, SUM(CASE WHEN ... THEN 1 ELSE 0 END), counts a subset inside one GROUP BY. Pre-aggregating before the join prevents fan-out, where a one-to-many join multiplies rows and inflates sums.' },
+
+  { id:'calendar-fill', cat:'CTEs & subqueries', level:3, ordered:true,
+    title:'Fill missing months with a recursive CTE',
+    prompt:'Return every month from 2025-07 through 2026-06 with completed GMV for store_id 5 (Lincoln Elem PTO). Months with no sales must show 0.',
+    hint:"A recursive CTE: anchor row date('2025-07-01'), recursive step date(m, '+1 month') until 2026-06-01. LEFT JOIN the store's monthly totals and COALESCE to 0.",
+    solution:`WITH RECURSIVE months(m) AS (
+  SELECT date('2025-07-01')
+  UNION ALL
+  SELECT date(m, '+1 month') FROM months WHERE m < '2026-06-01'
+), store5 AS (
+  SELECT strftime('%Y-%m', order_date) AS month, SUM(gmv) AS gmv
+  FROM orders
+  WHERE store_id = 5 AND status = 'completed'
+  GROUP BY month
+)
+SELECT strftime('%Y-%m', months.m) AS month,
+       ROUND(COALESCE(store5.gmv, 0), 2) AS gmv
+FROM months
+LEFT JOIN store5 ON store5.month = strftime('%Y-%m', months.m)
+ORDER BY month;`,
+    explain:'A recursive CTE has an anchor member, UNION ALL, and a recursive member with a stop condition. Postgres users often reach for generate_series instead. Gap-filling keeps line charts and averages honest.' },
+
+  { id:'win-rate', cat:'CTEs & subqueries', level:2, ordered:false,
+    title:'Pipeline win rate by owner',
+    prompt:'From deals, return owner, closed-won count, closed-lost count, and win rate as a percent rounded to 1 decimal. Exclude open deals from the rate.',
+    hint:'Conditional aggregation again. Win rate = won / (won + lost).',
+    solution:`SELECT owner,
+       SUM(CASE WHEN stage = 'closedwon'  THEN 1 ELSE 0 END) AS won,
+       SUM(CASE WHEN stage = 'closedlost' THEN 1 ELSE 0 END) AS lost,
+       ROUND(100.0 * SUM(CASE WHEN stage = 'closedwon' THEN 1 ELSE 0 END)
+             / NULLIF(SUM(CASE WHEN stage IN ('closedwon','closedlost') THEN 1 ELSE 0 END), 0), 1) AS win_rate_pct
+FROM deals
+GROUP BY owner;`,
+    explain:'You built this exact metric in HubSpot at Chipply, so expect follow-ups: should open deals count, how do you treat deals that reopen, and over what window do you measure.' },
+
+  { id:'second-highest', cat:'CTEs & subqueries', level:2, ordered:false,
+    title:'Second-highest dealer',
+    prompt:'Return the dealer_name with the second-highest completed GMV.',
+    hint:'DENSE_RANK in a CTE and keep rank 2, or ORDER BY ... LIMIT 1 OFFSET 1.',
+    solution:`WITH dealer_gmv AS (
+  SELECT d.dealer_name, SUM(o.gmv) AS gmv
+  FROM orders o
+  JOIN stores s  ON s.store_id = o.store_id
+  JOIN dealers d ON d.dealer_id = s.dealer_id
+  WHERE o.status = 'completed'
+  GROUP BY d.dealer_name
+), ranked AS (
+  SELECT dealer_name, DENSE_RANK() OVER (ORDER BY gmv DESC) AS rk
+  FROM dealer_gmv
+)
+SELECT dealer_name FROM ranked WHERE rk = 2;`,
+    explain:'LIMIT/OFFSET breaks on ties. DENSE_RANK returns every dealer tied for second. Mention the tie case out loud in an interview; it shows you think about edge cases.' }
+];
+
+// ---------- Concept flashcards ----------
+const SQL_CARDS = [
+  // Joins & aggregation
+  {cat:'Joins & aggregation', q:'In what order does a SELECT statement logically run?', a:'FROM and JOINs, WHERE, GROUP BY, HAVING, SELECT (window functions run here), DISTINCT, ORDER BY, LIMIT/OFFSET. That order explains why WHERE cannot see a SELECT alias or an aggregate, and ORDER BY can.'},
+  {cat:'Joins & aggregation', q:'INNER vs LEFT vs FULL OUTER join?', a:'INNER keeps rows that match on both sides. LEFT keeps every left row and fills NULLs where the right side has no match. FULL OUTER keeps unmatched rows from both sides. CROSS JOIN returns every combination.'},
+  {cat:'Joins & aggregation', q:'Why does a WHERE filter on the right table break a LEFT JOIN?', a:'Unmatched rows carry NULL in right-table columns, and WHERE right.col = \'x\' throws those rows out, so the query behaves like an INNER JOIN. Move the condition into the ON clause to filter the right side and keep every left row.', code:"SELECT s.store_name, o.order_id\nFROM stores s\nLEFT JOIN orders o\n  ON o.store_id = s.store_id\n AND o.status = 'completed';"},
+  {cat:'Joins & aggregation', q:'COUNT(*) vs COUNT(col) vs COUNT(DISTINCT col)?', a:'COUNT(*) counts rows. COUNT(col) counts non-NULL values in col. COUNT(DISTINCT col) counts unique non-NULL values. After a LEFT JOIN, count a column from the right table to get 0 for no matches.'},
+  {cat:'Joins & aggregation', q:'WHERE vs HAVING?', a:'WHERE filters individual rows before grouping and cannot use aggregates. HAVING filters groups after aggregation. Put row-level filters in WHERE: the engine aggregates fewer rows.'},
+  {cat:'Joins & aggregation', q:'How do NULLs behave in comparisons?', a:'Any comparison with NULL returns UNKNOWN, so col = NULL never matches. Use IS NULL / IS NOT NULL. NOT IN against a list that contains a NULL returns no rows at all; use NOT EXISTS instead.'},
+  {cat:'Joins & aggregation', q:'What is join fan-out and how do you prevent it?', a:'A one-to-many join repeats the "one" side for every match, so summing a column from that side multiplies it. Aggregate each side to the grain you need before joining, or check row counts before and after each join.'},
+  {cat:'Joins & aggregation', q:'UNION vs UNION ALL?', a:'UNION removes duplicate rows, which costs a sort or hash. UNION ALL keeps every row and runs faster. Use UNION ALL unless you need deduplication.'},
+  {cat:'Joins & aggregation', q:'What is conditional aggregation?', a:'A CASE expression inside an aggregate counts or sums a subset within one GROUP BY. It pivots rows into columns without extra joins.', code:"SUM(CASE WHEN status = 'refunded' THEN gmv ELSE 0 END) AS refunded_gmv"},
+  {cat:'Joins & aggregation', q:'When would you use a self join?', a:'When a table relates to itself: employee to manager, an order to the same customer\'s previous order, comparing two dates for one entity. Alias the table twice and join on the relationship.'},
+  // Window functions
+  {cat:'Window functions', q:'Window function vs GROUP BY?', a:'GROUP BY collapses rows into one per group. A window function computes across a set of related rows and keeps every row. Use windows for rankings, running totals, and comparing a row to its group.'},
+  {cat:'Window functions', q:'ROW_NUMBER vs RANK vs DENSE_RANK on values 100, 90, 90, 80?', a:'ROW_NUMBER: 1, 2, 3, 4 (ties broken arbitrarily). RANK: 1, 2, 2, 4 (skips after a tie). DENSE_RANK: 1, 2, 2, 3 (no gaps).'},
+  {cat:'Window functions', q:'What do PARTITION BY and ORDER BY do inside OVER()?', a:'PARTITION BY splits rows into independent groups and restarts the calculation for each. ORDER BY sets row order inside each partition, and for aggregates it also turns on a running frame.'},
+  {cat:'Window functions', q:'ROWS vs RANGE frames?', a:'ROWS counts physical rows (ROWS BETWEEN 6 PRECEDING AND CURRENT ROW gives a 7-row moving window). RANGE groups rows with equal ORDER BY values as peers. The default frame with ORDER BY is RANGE UNBOUNDED PRECEDING to CURRENT ROW, which makes tied dates jump together in a running total.'},
+  {cat:'Window functions', q:'Why can\'t you put a window function in WHERE?', a:'Window functions run during SELECT, after WHERE, GROUP BY and HAVING. Compute it in a CTE or subquery and filter in the outer query. Snowflake, BigQuery and Databricks add QUALIFY for this.', code:'WITH r AS (\n  SELECT *, ROW_NUMBER() OVER (PARTITION BY region ORDER BY gmv DESC) rn\n  FROM store_gmv)\nSELECT * FROM r WHERE rn <= 3;'},
+  {cat:'Window functions', q:'What do LAG and LEAD do?', a:'LAG(col, n, default) reads the value n rows before the current row in the window order. LEAD reads n rows after. Use them for period-over-period change, time between events, and next-step funnels.'},
+  {cat:'Window functions', q:'What is the LAST_VALUE gotcha?', a:'With ORDER BY and the default frame, the frame ends at the current row, so LAST_VALUE returns the current row. Add ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING, or use FIRST_VALUE with the order reversed.'},
+  {cat:'Window functions', q:'What does NTILE(4) do?', a:'It splits ordered rows into 4 buckets of near-equal size and returns the bucket number. Use it for quartiles or deciles, such as segmenting dealers by GMV.'},
+  {cat:'Window functions', q:'How do you compute a 7-day moving average?', a:'Aggregate to one row per day first (fill missing days), then AVG(value) OVER (ORDER BY day ROWS BETWEEN 6 PRECEDING AND CURRENT ROW).'},
+  // CTEs & subqueries
+  {cat:'CTEs & subqueries', q:'CTE vs subquery vs temp table?', a:'A CTE names a query step for readability and runs inside one statement. A subquery does the same inline. A temp table stores results physically for reuse across statements and can carry indexes. Most engines optimize CTEs and subqueries the same way.'},
+  {cat:'CTEs & subqueries', q:'What is a correlated subquery?', a:'A subquery that references a column from the outer query, so it logically runs once per outer row. Example: WHERE gmv > (SELECT AVG(gmv) FROM t b WHERE b.region = a.region). A window function or join often runs faster.'},
+  {cat:'CTEs & subqueries', q:'EXISTS vs IN?', a:'EXISTS stops at the first match and handles NULLs safely. IN compares against a list; NOT IN returns nothing if the list holds a NULL. Modern optimizers often run IN and EXISTS the same way, but NOT EXISTS is the safe anti-join.'},
+  {cat:'CTEs & subqueries', q:'What are the parts of a recursive CTE?', a:'An anchor query that returns the starting rows, UNION ALL, and a recursive query that references the CTE itself with a stop condition. Uses: date spines, org charts, bill-of-materials hierarchies.'},
+  {cat:'CTEs & subqueries', q:'How do you remove duplicates and keep one row per key?', a:'ROW_NUMBER() OVER (PARTITION BY key ORDER BY rule) in a CTE, then keep rn = 1. The ORDER BY decides the survivor: earliest, latest, most complete.'},
+  // Performance & theory
+  {cat:'Performance & theory', q:'What is an index and when does it hurt?', a:'An index is a sorted structure (usually a B-tree) that lets the engine find rows without scanning the table. It speeds reads on filtered, joined or sorted columns. It slows inserts and updates, takes storage, and helps little on low-cardinality columns or queries that read most of the table.'},
+  {cat:'Performance & theory', q:'What makes a predicate sargable?', a:'The engine can use an index when the column stands alone. WHERE YEAR(order_date) = 2026 wraps the column in a function and forces a scan. Rewrite as WHERE order_date >= \'2026-01-01\' AND order_date < \'2027-01-01\'. Leading wildcards (LIKE \'%x\') also block index use.'},
+  {cat:'Performance & theory', q:'Composite index (a, b): which queries use it?', a:'Queries filtering on a, or on a and b. A filter on b alone usually cannot seek with it. Put the most selective equality column first and range columns last.'},
+  {cat:'Performance & theory', q:'How do you read an execution plan?', a:'Run EXPLAIN (EXPLAIN ANALYZE in Postgres for actual timings). Look for full scans on big tables, estimated vs actual row gaps, expensive sorts, and nested loops over large inputs. Then add an index, rewrite the predicate, pre-aggregate, or update statistics. In this app\'s sandbox, try EXPLAIN QUERY PLAN.'},
+  {cat:'Performance & theory', q:'Clustered vs nonclustered index?', a:'A clustered index sets the physical row order of the table; a table has only one (SQL Server uses the primary key by default). A nonclustered index is a separate structure pointing back to rows; a table can have many.'},
+  {cat:'Performance & theory', q:'Explain 1NF, 2NF and 3NF in one breath.', a:'1NF: atomic values, no repeating groups. 2NF: every non-key column depends on the whole key. 3NF: no non-key column depends on another non-key column. Normalize OLTP systems to avoid update anomalies; denormalize analytics models for fast reads.'},
+  {cat:'Performance & theory', q:'OLTP vs OLAP?', a:'OLTP serves many small reads and writes (orders, payments), normalized, row-oriented. OLAP serves large scans and aggregations for analytics, usually columnar, with star schemas. Your Postgres warehouse at Chipply sat on the OLAP side.'},
+  {cat:'Performance & theory', q:'What does ACID mean?', a:'Atomicity: a transaction applies fully or not at all. Consistency: it moves the database between valid states. Isolation: concurrent transactions do not see each other\'s partial work. Durability: committed data survives a crash.'},
+  {cat:'Performance & theory', q:'View vs materialized view?', a:'A view stores the query and runs it every time you read it. A materialized view stores the results and needs a refresh. Use materialized views for expensive aggregates that tolerate some staleness.'},
+  {cat:'Performance & theory', q:'DELETE vs TRUNCATE vs DROP?', a:'DELETE removes chosen rows, logs each one, fires triggers, and can roll back. TRUNCATE empties the whole table fast with minimal logging. DROP removes the table and its definition.'},
+  {cat:'Performance & theory', q:'Primary key vs foreign key vs unique constraint?', a:'A primary key identifies each row: unique and not NULL, one per table. A foreign key references a primary key in another table and enforces that the parent exists. A unique constraint blocks duplicates but can allow NULL.'},
+  {cat:'Performance & theory', q:'How would you speed up a slow dashboard query?', a:'Check the plan first. Then filter early, select only needed columns, pre-aggregate to the reporting grain, index join and filter columns, replace correlated subqueries with joins or windows, and materialize heavy logic in the warehouse instead of the report.'}
+];
+
+if (typeof module !== 'undefined') module.exports = { buildPracticeSQL, EXERCISES, SQL_CARDS, SCHEMA_DOC };
+
+// beats: the three-part skeleton to say out loud. draw: your own material to pull from.
+const QUESTIONS = [
+  // ---------- Pitch & motivation ----------
+  {cat:'Pitch & motivation', q:'Tell me about yourself.',
+   test:'A 90-second map: who you are now, how you got here, why this role.',
+   beats:['Now: what you do and the scope you own', 'Then: one or two past roles that explain your edge', 'Next: why this role is the logical step'],
+   draw:'Sole analyst at Chipply owning the warehouse, Power BI, HubSpot and the integrations. C&C Reservoirs: owned Power BI and Tableau end to end plus the Salesforce integrations, managed 2 analysts. Ph.D. geologist, so you build models under uncertainty.'},
+  {cat:'Pitch & motivation', q:'Why did you leave Chipply?',
+   test:'A calm, factual answer with no blame, then a pivot forward.',
+   beats:['One sentence of fact', 'What you built while there', 'What you want next and why this role fits'],
+   draw:'Chipply decommissioned Power BI and moved report generation to AI, which eliminated the role. You had already built the MCP server that let Claude query the semantic model and cut a full dashboard update from several days to about an hour.'},
+  {cat:'Pitch & motivation', q:'Why do you want to work here?',
+   test:'Proof you researched them, tied to what you bring.',
+   beats:['Something specific about their product, data or mission', 'The problem in the posting you have already solved', 'What you want to learn or own there'],
+   draw:'Pull the posting\'s top two requirements and match each to a Chipply or C&C result before the call. Write the company detail on a sticky note.'},
+  {cat:'Pitch & motivation', q:'Why did you move from geoscience into data and BI?',
+   test:'That the move was deliberate and your science background is an asset.',
+   beats:['The thread: you always worked with data and uncertainty', 'The moment BI became the main job (C&C ownership)', 'How the science shows up in your analysis now'],
+   draw:'Hess: regression, kriging, Bayesian and Monte Carlo work for risk and resource volumes. C&C: the product manager role turned into owning the reporting stack and usage tracking.'},
+  {cat:'Pitch & motivation', q:'What are your salary expectations?',
+   test:'A researched range, stated without apology.',
+   beats:['Thank them, then give the range', 'Anchor it in the role scope or market data', 'Show flexibility on the full package'],
+   draw:'Use the posted band if one exists and aim for the middle to upper half. For CGI you said about $115k ($110k to $120k). Say the number, then stop talking.'},
+  {cat:'Pitch & motivation', q:'What are you looking for in your next role?',
+   test:'Fit and self-awareness, not a wish list.',
+   beats:['The kind of problems you want', 'The team setup you do your best work in', 'How that matches what they described'],
+   draw:'After being the only analyst, a team to learn from and build standards with is a real, credible draw.'},
+  {cat:'Pitch & motivation', q:'Where do you see yourself in three to five years?',
+   test:'Ambition that fits inside their organization.',
+   beats:['Deeper expertise in their domain', 'More ownership: models, standards, mentoring', 'Tie it to their growth'],
+   draw:'You have mentored interns at Hess, supervised TAs at UH, and trained Chipply finance and sales staff on SQL and reporting.'},
+  {cat:'Pitch & motivation', q:'What is your biggest weakness?',
+   test:'A real one, with what you are doing about it.',
+   beats:['Name it plainly', 'Show its cost once', 'Show the system you use to manage it'],
+   draw:'An option: you over-explain under pressure. Your fix is leading with the answer, then giving one example. This app exists for that.'},
+  {cat:'Pitch & motivation', q:'What questions do you have for us?',
+   test:'Curiosity and judgment. Always have two ready.',
+   beats:['A question about the team\'s biggest data problem right now', 'A question about how success looks at 90 days', 'A question about the stack or how stakeholders request work'],
+   draw:'Avoid questions the posting already answers. Ask the interviewer about their own work too.'},
+
+  // ---------- Behavioral ----------
+  {cat:'Behavioral', q:'Tell me about a time you disagreed with a stakeholder.',
+   test:'Respect, data-driven persuasion, and a clean outcome.',
+   beats:['Situation and what they wanted (one sentence)', 'What you did: data, options, a conversation', 'Result and what the relationship looked like after'],
+   draw:'A metric definition dispute, a report request that would have double-counted, or a dashboard ask where you proposed a better measure.'},
+  {cat:'Behavioral', q:'Tell me about a time you found a data quality problem.',
+   test:'How you detect, fix, and prevent.',
+   beats:['What looked wrong and how you noticed', 'How you traced it to the source and fixed it', 'What you put in place so it would not repeat'],
+   draw:'Production defects you caught at Chipply. The Glue jobs whose output fed Lambda and Power BI, where you owned consistency. The documentation standard you created without being asked.'},
+  {cat:'Behavioral', q:'Tell me about a time your analysis changed a decision.',
+   test:'Business impact, not just the analysis.',
+   beats:['The decision on the table', 'What your analysis showed that others missed', 'What the business did differently and the result'],
+   draw:'C&C usage tracking that fed customer outreach and product decommissioning decisions. The Chipply cohort retention finding.'},
+  {cat:'Behavioral', q:'Tell me about a time you explained something technical to a non-technical audience.',
+   test:'Translation skill and audience awareness.',
+   beats:['Who the audience was and what they cared about', 'How you simplified without losing accuracy', 'What they did with it'],
+   draw:'The live demo for Beach Energy\'s VP of Exploration that closed a $750k per year, 3-year contract. Training C&C clients across 7 countries and Chipply finance and sales staff.'},
+  {cat:'Behavioral', q:'Tell me about a time you led people or a project without formal authority.',
+   test:'Influence, coordination, follow-through.',
+   beats:['The goal and who had to move', 'How you organized, assigned and followed up', 'The result with a number'],
+   draw:'TDX 130th anniversary: 106 guests, budget, contracts, vendors, two sites. ADNOC cross-company delivery that closed a $4M, 3-year subscription.'},
+  {cat:'Behavioral', q:'Tell me about a time you managed people.',
+   test:'Delegation, coaching, accountability.',
+   beats:['Team size and what they owned', 'One coaching or delegation moment', 'Outcome for the person and the work'],
+   draw:'2 direct reports on the C&C internal analytics team. Head TA supervising 3 TAs for 75 students at UH. Mentoring 2 interns at Hess.'},
+  {cat:'Behavioral', q:'How do you prioritize when everyone needs something at once?',
+   test:'A repeatable method, not heroics.',
+   beats:['How you size requests: impact, urgency, effort', 'How you make the trade-off visible to requesters', 'An example where you said not yet'],
+   draw:'As the only analyst at Chipply, every request came to you. C&C: Azure DevOps backlog, user stories, and roadmap ownership.'},
+  {cat:'Behavioral', q:'Tell me about a mistake you made.',
+   test:'Ownership and learning. Pick a real one with a contained impact.',
+   beats:['What went wrong and your part in it', 'How you fixed it fast and told the right people', 'The change you made afterward'],
+   draw:'A report number that shipped wrong, a refresh you broke, an estimate that ran long. End on the safeguard you added.'},
+  {cat:'Behavioral', q:'Tell me about a time you learned a new tool quickly.',
+   test:'Learning speed with proof.',
+   beats:['Why you needed it', 'How you learned: build something real', 'What you shipped and how you know it works'],
+   draw:'dbt and Snowflake in September: a reconciliation project with CI that fails on an injected defect. Databricks and PySpark: a bronze, silver, gold pipeline on BLS wage data.'},
+  {cat:'Behavioral', q:'Tell me about a process you improved.',
+   test:'Initiative and measurable gain.',
+   beats:['The slow or error-prone process', 'What you built or changed', 'The before and after number'],
+   draw:'The Power BI MCP server: dashboard updates from several days to about 1 hour, with answer accuracy and query success rate tracked.'},
+  {cat:'Behavioral', q:'Tell me about a time you worked with ambiguous requirements.',
+   test:'How you create clarity.',
+   beats:['What was unclear', 'The questions, mockups or user stories you used', 'What you delivered and how the requester reacted'],
+   draw:'Writing user stories in Azure DevOps at C&C. Release notes and decision logs you kept as product owner.'},
+  {cat:'Behavioral', q:'Tell me about a time you had to deliver under a tight deadline.',
+   test:'Scoping and calm execution.',
+   beats:['The deadline and what was at stake', 'What you cut and what you protected', 'The result and what you would do differently'],
+   draw:'Executive demos at C&C. Month-end or bonus reporting at Chipply where reps tracked group goals.'},
+
+  // ---------- Technical explain-it ----------
+  {cat:'Technical explain-it', q:'Explain a star schema and when you would use a snowflake schema.',
+   test:'Modeling fundamentals and trade-offs.',
+   beats:['Facts hold events and measures, dimensions hold descriptive attributes', 'Star denormalizes dimensions for simple, fast queries; snowflake normalizes them', 'Your example and why you chose it'],
+   draw:'Chipply\'s warehouse ran a star schema with Type 2 slowly changing dimensions.'},
+  {cat:'Technical explain-it', q:'What is a Type 2 slowly changing dimension?',
+   test:'History tracking mechanics.',
+   beats:['Type 2 adds a new row when an attribute changes', 'Columns: surrogate key, valid_from, valid_to, is_current', 'Why it matters: facts join to the version that was true at the time'],
+   draw:'A dealer changing tier or region at Chipply. Contrast with Type 1, which overwrites.'},
+  {cat:'Technical explain-it', q:'Walk me through how you built row-level security.',
+   test:'Real implementation detail.',
+   beats:['Static roles vs dynamic RLS with USERPRINCIPALNAME()', 'The security table and relationship that filters the model', 'How you tested it with View as role'],
+   draw:'You built both dynamic and role-based RLS at Chipply and on C&C reports.'},
+  {cat:'Technical explain-it', q:'Explain row context vs filter context in DAX.',
+   test:'The concept most DAX candidates miss.',
+   beats:['Row context: iterating one row at a time (calculated columns, X functions)', 'Filter context: the filters applied to the model from visuals, slicers and CALCULATE', 'Context transition: CALCULATE turns row context into filter context'],
+   draw:'Give a measure example: SUMX over stores with CALCULATE([Total GMV]).'},
+  {cat:'Technical explain-it', q:'How do you tune a slow Power BI report?',
+   test:'A structured diagnostic, not guesses.',
+   beats:['Measure first: Performance Analyzer, DAX Studio, refresh logs', 'Model fixes: reduce cardinality, remove unused columns, star schema, Import vs DirectQuery', 'DAX and visual fixes: simpler measures, fewer visuals per page, aggregations'],
+   draw:'You have tuned model size and cardinality, slow or failing refreshes, and DirectQuery vs Import choices.'},
+  {cat:'Technical explain-it', q:'Import vs DirectQuery: how do you choose?',
+   test:'Trade-off reasoning.',
+   beats:['Import: fastest queries, full DAX, data as fresh as the last refresh', 'DirectQuery: near real-time, source does the work, limits and slower visuals', 'Composite models and aggregations as the middle path'],
+   draw:'Connect to a real case from Chipply\'s Postgres warehouse.'},
+  {cat:'Technical explain-it', q:'How do you make sure a dashboard number is right?',
+   test:'Validation habits.',
+   beats:['Reconcile to a trusted source (finance, the system of record)', 'Check grain, filters, and join row counts', 'Document the definition and add automated tests'],
+   draw:'Your dbt reconciliation project compares warehouse revenue to the general ledger, and CI fails on an injected defect.'},
+  {cat:'Technical explain-it', q:'Walk me through a data pipeline you built.',
+   test:'End-to-end understanding.',
+   beats:['Source and extraction', 'Transformation and where it ran', 'Load, consumers, and how you monitored it'],
+   draw:'Chipply: AWS Glue jobs from production into the Postgres warehouse; Lambda for HubSpot API work; HubSpot synced through Connectorly; Power BI on top. GitHub version control on the Lambda.'},
+  {cat:'Technical explain-it', q:'What is dbt and why would a team use it?',
+   test:'Modern data stack literacy.',
+   beats:['SQL SELECT models compiled and run in the warehouse', 'Tests, documentation, lineage, version control', 'Your project as proof'],
+   draw:'finance-ops-reconciliation: staging, intermediate, marts, recon layers; 5 singular tests; seeds; GitHub Actions CI; runs on DuckDB and Snowflake.'},
+  {cat:'Technical explain-it', q:'Explain a window function to a business user.',
+   test:'Translation of a technical idea.',
+   beats:['A calculation that looks at neighboring rows without collapsing them', 'Example: rank each store inside its region', 'Example: running total or month-over-month change'],
+   draw:'Use GMV by store and region; it lands with anyone in a marketplace business.'},
+  {cat:'Technical explain-it', q:'Tell me about your AI or MCP work.',
+   test:'Practical AI judgment, not hype.',
+   beats:['What it connected: Claude to the warehouse and the Power BI semantic model', 'How you kept a human in the loop and measured quality', 'Result: days to about an hour'],
+   draw:'You tracked answer accuracy and query success rate, reviewed drafts, and applied model changes yourself.'},
+  {cat:'Technical explain-it', q:'How do you explain an index and when you would add one?',
+   test:'Performance fundamentals.',
+   beats:['A sorted lookup that avoids a full scan', 'Add for frequent filters, joins and sorts on selective columns', 'Cost: slower writes and storage; confirm with the plan'],
+   draw:'You have done DBA work on MySQL at Chipply: instance and user administration.'},
+
+  // ---------- Case & metrics ----------
+  {cat:'Case & metrics', q:'GMV dropped 15% week over week. How do you investigate?',
+   test:'A structured, hypothesis-driven approach.',
+   beats:['Confirm it is real: data freshness, pipeline, definition changes', 'Decompose: orders x average order value; segment by dealer, region, store, channel', 'Check external factors (seasonality, holidays) and report findings with next steps'],
+   draw:'Chipply revenue tied to GMV. School and team store seasonality is a real driver.'},
+  {cat:'Case & metrics', q:'How would you measure the success of a new dealer onboarding program?',
+   test:'Metric design with leading and lagging signals.',
+   beats:['North star: time to first sale or GMV in first 90 days', 'Leading indicators: stores launched, setup steps completed', 'Comparison: cohort before vs after, controls for dealer size'],
+   draw:'C&C subscriber engagement framework and usage tracking.'},
+  {cat:'Case & metrics', q:'Design a dashboard for a VP of Revenue.',
+   test:'Audience-first design.',
+   beats:['Ask what decisions they make weekly', 'Top: 3 to 5 KPIs vs target; middle: trend and drivers; bottom: drill to rep or dealer', 'Definitions, refresh time, and an owner on the page'],
+   draw:'HubSpot pipelines with closed-won and win rates, rep progress toward group bonus goals, CRM adoption.'},
+  {cat:'Case & metrics', q:'A stakeholder says your number does not match finance. What do you do?',
+   test:'Calm reconciliation, not defensiveness.',
+   beats:['Get both numbers and their definitions side by side', 'Reconcile: timing, filters (refunds, cancellations), grain, source', 'Agree on a definition, document it, and fix whichever side was wrong'],
+   draw:'Your dbt reconciliation project exists for this exact problem.'},
+  {cat:'Case & metrics', q:'How would you tell whether a new feature increased retention?',
+   test:'Causal thinking.',
+   beats:['Best: a randomized A/B test with a pre-set metric and sample size', 'If not possible: cohort comparison or difference-in-differences, watch selection bias', 'Check practical significance, not just p-values'],
+   draw:'You have analyzed A/B results and cohort pre-post comparisons. Say plainly you have not owned an experiment end to end if asked.'},
+  {cat:'Case & metrics', q:'How would you define churn for a marketplace like ours?',
+   test:'Definition judgment.',
+   beats:['Pick the entity: buyer, seller, store', 'Pick the inactivity window from the natural purchase cycle', 'Validate: how many "churned" users come back'],
+   draw:'Team stores order seasonally, so a 30-day window would mislabel most of them.'},
+  {cat:'Case & metrics', q:'Which metrics would you track for a sales pipeline?',
+   test:'Domain fluency.',
+   beats:['Volume: pipeline value and coverage vs quota', 'Efficiency: win rate, average deal size, sales cycle length', 'Velocity: (deals x win rate x deal size) / cycle length'],
+   draw:'You built these in HubSpot at Chipply for reps and sales leaders.'},
+  {cat:'Case & metrics', q:'You get five dashboard requests due the same week. Walk me through it.',
+   test:'Prioritization out loud.',
+   beats:['Clarify each: decision it supports, deadline, who asked', 'Rank by impact and effort, reuse shared components', 'Communicate the plan and dates to each requester'],
+   draw:'Sole-analyst reality at Chipply.'}
+];
+
+// ---------- Quiz bank: [question, options, correct index, explanation] ----------
+const QUIZ = {
+  'Power BI & DAX': [
+    ['What does CALCULATE do?', ['Creates a calculated column','Evaluates an expression in a modified filter context','Iterates a table row by row','Removes all relationships'], 1, 'CALCULATE changes the filter context, then evaluates the expression. When called inside a row context it also performs context transition.'],
+    ['Which function returns the user\'s sign-in name for dynamic row-level security?', ['USERNAME only','USERPRINCIPALNAME()','CURRENTUSER()','LOOKUPVALUE()'], 1, 'USERPRINCIPALNAME() returns the UPN, usually the email. Filter a security table on it.'],
+    ['SUM vs SUMX?', ['They are identical','SUMX iterates a table and sums an expression per row','SUM works only in calculated columns','SUMX ignores filters'], 1, 'SUM aggregates one column. SUMX evaluates an expression for each row of a table, such as qty * price, then sums.'],
+    ['A calculated column is computed when?', ['Every time a visual renders','At data refresh, and stored in the model','Only in DirectQuery','Never; it is virtual'], 1, 'Calculated columns compute at refresh and take memory. Measures compute at query time in the current filter context.'],
+    ['What does ALL(Table) do inside CALCULATE?', ['Adds every filter','Removes filters from that table','Returns distinct values','Creates a relationship'], 1, 'ALL removes filters. Common use: share of total = DIVIDE([Sales], CALCULATE([Sales], ALL(Product))).'],
+    ['Why prefer DIVIDE(a, b) over a / b?', ['It runs on the GPU','It handles divide-by-zero with an alternate result','It rounds automatically','It ignores filters'], 1, 'DIVIDE returns BLANK, or your alternate value, when the denominator is zero.'],
+    ['Which change usually shrinks an Import model the most?', ['Adding more visuals','Removing high-cardinality columns you do not use','Turning on bidirectional filters','Using more calculated columns'], 1, 'VertiPaq compresses by column; unique-heavy columns like GUIDs and datetimes with seconds take the most space.'],
+    ['What do calculation groups help with?', ['Row-level security','Reusing the same logic (YTD, prior year) across many measures','Scheduling refresh','Gateway setup'], 1, 'Calculation groups apply a pattern, such as time intelligence, to any measure, cutting measure count. You have shipped them with Tabular Editor.'],
+    ['Bidirectional relationship filters are risky because they can:', ['Speed up every query','Create ambiguous filter paths and slower, surprising results','Break RLS entirely','Delete data'], 1, 'Prefer single direction from dimension to fact. Use CROSSFILTER in a measure when you need it.'],
+    ['What does incremental refresh do?', ['Refreshes only new or changed partitions of a large table','Refreshes every 5 minutes','Converts to DirectQuery','Compresses visuals'], 0, 'You define RangeStart and RangeEnd parameters; Power BI partitions by date and refreshes the recent window.'],
+    ['Paginated reports (Report Builder) fit best for:', ['Interactive exploration','Pixel-perfect, printable, multi-page reports like invoices','Real-time streaming','Mobile layouts'], 1, 'Paginated reports export cleanly and handle long tables. You used them extensively at Chipply.'],
+    ['Time intelligence functions need what in the model?', ['A marked date table with contiguous dates','A DirectQuery source','RLS','A calculated column per year'], 0, 'Mark a dedicated date table with no gaps and relate it to your facts.']
+  ],
+  'Data modeling & ETL': [
+    ['In a star schema, the fact table holds:', ['Descriptive attributes','Measurable events and foreign keys to dimensions','Only surrogate keys','Report layouts'], 1, 'Facts hold numbers at a defined grain plus keys. Dimensions hold the who, what, where.'],
+    ['The grain of a fact table means:', ['Its file size','What one row represents','Its refresh frequency','Its compression ratio'], 1, 'State the grain first: one row per order line, per day per store, and so on.'],
+    ['A Type 2 SCD handles a changed attribute by:', ['Overwriting it','Adding a new row with validity dates','Deleting the old row','Ignoring it'], 1, 'Type 1 overwrites. Type 2 keeps history with new rows. Type 3 keeps a previous-value column.'],
+    ['Why use surrogate keys in dimensions?', ['They look nicer','They stay stable when source keys change and support SCD history','They are required by SQL','They encrypt data'], 1, 'Surrogate keys decouple the warehouse from source systems and let one natural key have many history rows.'],
+    ['ETL vs ELT?', ['Same thing','ELT loads raw data first and transforms inside the warehouse','ETL is only for streaming','ELT skips transformation'], 1, 'Cloud warehouses made ELT common: load raw, transform with SQL tools like dbt.'],
+    ['Data Vault models use which core structures?', ['Facts and dimensions','Hubs, links and satellites','Cubes and measures','Nodes and edges'], 1, 'Hubs hold business keys, links hold relationships, satellites hold descriptive history.'],
+    ['An idempotent pipeline:', ['Runs only once','Produces the same result when re-run on the same input','Never fails','Uses no SQL'], 1, 'Idempotency makes retries and backfills safe. Upserts or partition overwrites help.'],
+    ['A dbt "ref()" does what?', ['Calls an API','References another model and builds the dependency graph','Creates an index','Runs Python'], 1, 'ref() resolves the right schema and lets dbt order runs and draw lineage.'],
+    ['Which dbt test checks a column has no duplicates?', ['not_null','unique','accepted_values','relationships'], 1, 'unique fails on duplicate values. relationships checks foreign keys.'],
+    ['A conformed dimension is:', ['A dimension shared consistently across multiple fact tables','A dimension with no history','A fact with one row','A view'], 0, 'Conformed dimensions such as date or dealer let you compare facts from different processes.'],
+    ['Change data capture (CDC) means:', ['Capturing only inserts, updates and deletes from the source','Copying the full table daily','Compressing data','Masking PII'], 0, 'CDC reads the source log or change columns so loads stay small and near real-time.'],
+    ['A medallion architecture layers data as:', ['Raw, staged, cubed','Bronze (raw), silver (cleaned), gold (business-ready)','Hot, warm, cold','OLTP, OLAP, ML'], 1, 'You built bronze, silver and gold layers in your Databricks project.']
+  ],
+  'Cloud & engineering': [
+    ['Snowflake separates which two things so they scale independently?', ['Users and roles','Storage and compute','Tables and views','SQL and Python'], 1, 'Virtual warehouses (compute) scale separately from storage, so teams can run workloads without contention.'],
+    ['Snowflake Time Travel lets you:', ['Schedule queries','Query or restore data as it existed earlier','Predict trends','Move data across regions'], 1, 'You can SELECT ... AT (OFFSET => -3600) or UNDROP a table within the retention window.'],
+    ['In Spark, a transformation like filter() is:', ['Executed immediately','Lazy until an action like count() or write()','Only for streaming','Run on the driver only'], 1, 'Spark builds a plan from lazy transformations and runs it on an action.'],
+    ['Which file format is columnar and common in lakes?', ['CSV','JSON','Parquet','XML'], 2, 'Parquet stores columns together, compresses well, and lets engines skip unneeded columns.'],
+    ['Delta Lake adds what on top of Parquet files?', ['A GUI','ACID transactions, schema enforcement and time travel','Email alerts','Encryption only'], 1, 'Delta keeps a transaction log so lake tables behave more like warehouse tables.'],
+    ['AWS Lambda is best described as:', ['A data warehouse','Serverless functions that run on events or schedules','A BI tool','A relational database'], 1, 'You used Lambda at Chipply, with a companion Lambda-to-S3 pipeline in a separate project.'],
+    ['AWS Glue is primarily:', ['A serverless ETL and data catalog service','A dashboard tool','A message queue','A DNS service'], 0, 'At Chipply, Glue jobs pulled production tables, transformed them, and loaded the warehouse.'],
+    ['Azure Entra ID handles:', ['Identity and access management','Blob storage','SQL queries','Spark clusters'], 0, 'Entra ID (formerly Azure AD) manages users, groups and app sign-in, which Power BI RLS and workspace access rely on.'],
+    ['Git: what does a pull request do?', ['Deletes a branch','Proposes merging changes from a branch, with review','Downloads the repo','Reverts the last commit'], 1, 'Pull requests carry review and CI checks before code merges to main.'],
+    ['What does CI mean in a data project?', ['Continuous integration: automated tests run on every change','Customer insights','Compute instance','Column index'], 0, 'Your dbt project runs CI that fails when the reconciliation variance breaks.'],
+    ['Microsoft Fabric bundles what?', ['Only Power BI','Lakehouse, data engineering, warehousing and Power BI on OneLake','A Python IDE','An ERP'], 1, 'Fabric puts ingestion, Spark, warehouse and Power BI on one storage layer, OneLake.'],
+    ['An S3 bucket stores:', ['Relational tables only','Objects (files) addressed by key','Running containers','Only logs'], 1, 'S3 is object storage; data lakes and Lambda outputs often land there.']
+  ],
+  'Stats & Python': [
+    ['A p-value of 0.03 means:', ['3% chance the null is true','If the null were true, results this extreme would appear about 3% of the time','The effect size is 3%','97% chance the result is right'], 1, 'The p-value conditions on the null hypothesis. It does not give the probability the hypothesis is true.'],
+    ['Statistical power is:', ['The chance of a false positive','The chance of detecting a real effect of a given size','The sample mean','The confidence level'], 1, 'Power = 1 minus beta. Bigger samples and bigger effects raise power.'],
+    ['Why fix sample size before an A/B test?', ['It is a legal rule','Peeking and stopping early inflates false positives','Tools require it','It doubles power'], 1, 'Repeated checks give the test many chances to cross significance by luck.'],
+    ['Simpson\'s paradox is:', ['A trend that reverses when groups are combined','A sampling error','A biased survey','An outlier effect'], 0, 'Segment-level and pooled results can disagree when group sizes differ. Always check segments.'],
+    ['Median vs mean for order values with a few huge orders?', ['Mean is more robust','Median is more robust to outliers','They match','Neither works'], 1, 'Right-skewed data pulls the mean up. Report the median, or both.'],
+    ['A Monte Carlo simulation:', ['Fits a regression line','Samples many random inputs to model a distribution of outcomes','Sorts data','Tests normality'], 1, 'You used Monte Carlo at Hess for risk and resource volume estimates.'],
+    ['Correlation of 0.8 between ad spend and sales proves:', ['Ad spend causes sales','A strong linear association, not causation','Nothing at all','Sales cause ad spend'], 1, 'Confounders such as seasonality can drive both.'],
+    ['In pandas, df.groupby("region")["gmv"].sum() returns:', ['A DataFrame of all columns','A Series of GMV totals indexed by region','A list','A plot'], 1, 'Selecting one column before sum() returns a Series. Use .reset_index() for a DataFrame.'],
+    ['Which pandas call joins two DataFrames on a key like SQL?', ['df.concat','pd.merge(a, b, on="key", how="left")','df.append','df.pivot'], 1, 'merge mirrors SQL joins with how = inner, left, right or outer.'],
+    ['R-squared of 0.6 in a linear regression means:', ['60% accuracy','The model explains 60% of the variance in the target','60% of coefficients are significant','The slope is 0.6'], 1, 'R-squared measures explained variance, not predictive accuracy on new data.'],
+    ['Logistic regression predicts:', ['A continuous value','The probability of a binary outcome','Clusters','Time series'], 1, 'You built credit-card default forecasting in your certificate, a classic binary target.'],
+    ['A 95% confidence interval means:', ['95% of data falls inside it','Repeating the study, about 95% of intervals built this way would contain the true value','The estimate is 95% correct','p = 0.05'], 1, 'The confidence describes the method, not one interval.']
+  ],
+  'SQL theory': [
+    ['Which clause runs first logically?', ['SELECT','WHERE','FROM','ORDER BY'], 2, 'FROM and joins, then WHERE, GROUP BY, HAVING, SELECT, ORDER BY, LIMIT.'],
+    ['NOT IN (subquery) returns no rows when:', ['The subquery returns a NULL','The table is indexed','You use DISTINCT','The subquery is empty'], 0, 'Comparisons with NULL return UNKNOWN. Use NOT EXISTS.'],
+    ['Which predicate is sargable?', ["WHERE YEAR(order_date) = 2026","WHERE order_date >= '2026-01-01'","WHERE LOWER(email) = 'x'","WHERE name LIKE '%son'"], 1, 'The bare column on one side lets the engine seek an index.'],
+    ['RANK() on 50, 40, 40, 30 gives:', ['1,2,3,4','1,2,2,3','1,2,2,4','1,1,2,3'], 2, 'RANK skips after ties. DENSE_RANK would give 1,2,2,3.'],
+    ['A LEFT JOIN with WHERE right_table.col = \'x\' behaves like:', ['A FULL JOIN','An INNER JOIN','A CROSS JOIN','A LEFT JOIN still'], 1, 'Unmatched rows have NULL there and fail the filter. Move it to ON.'],
+    ['Third normal form removes:', ['Repeating groups','Partial key dependencies','Transitive dependencies between non-key columns','All NULLs'], 2, '1NF handles repeating groups, 2NF partial dependencies, 3NF transitive ones.'],
+    ['Isolation in ACID protects against:', ['Disk failure','Concurrent transactions seeing each other\'s partial changes','Bad SQL syntax','Slow queries'], 1, 'Isolation levels range from read uncommitted to serializable.'],
+    ['Which is fastest for emptying a large table?', ['DELETE FROM t','TRUNCATE TABLE t','UPDATE t SET x = NULL','DROP INDEX'], 1, 'TRUNCATE deallocates pages with minimal logging.'],
+    ['A covering index:', ['Covers every table','Contains all columns a query needs, so it skips the table','Is always clustered','Blocks writes'], 1, 'The engine answers from the index alone.'],
+    ['QUALIFY (Snowflake, Databricks) filters on:', ['Raw rows','Groups','Window function results','Joins'], 2, 'It does for window functions what HAVING does for aggregates.']
+  ]
+};
+
+const QUIZ_TOPICS = Object.keys(QUIZ);
+if (typeof module !== 'undefined') module.exports = { QUESTIONS, QUIZ, QUIZ_TOPICS };
+
+</script>
+<script>
+(function(){
+'use strict';
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const today = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const fmt = s => { s = Math.max(0, Math.round(s)); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); };
+
+// ---------- state + persistence ----------
+const KEY = 'prepdeck-v1';
+const blank = () => ({v:1, sqlSolved:{}, sqlPeek:{}, cards:{}, attempts:[], quiz:{}, misses:{}, days:{}, drafts:{}, updatedAt:0});
+let S = blank();
+try { const raw = localStorage.getItem(KEY); if (raw) S = Object.assign(blank(), JSON.parse(raw)); } catch(e) {}
+let remoteRef = null, saveTimer = null, writing = false, pendingWrite = false;
+function touch(){ S.days[today()] = true; S.updatedAt = Date.now(); scheduleSave(); }
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(saveNow, 900); }
+async function saveNow(){
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+  if (!remoteRef) return;
+  if (writing) { pendingWrite = true; return; }
+  writing = true;
+  try { await remoteRef.set({json: JSON.stringify(S), updatedAt: S.updatedAt}); setSync('Synced to your account'); }
+  catch(e) { setSync('Saved on this device'); }
+  writing = false;
+  if (pendingWrite) { pendingWrite = false; saveNow(); }
+}
+function setSync(t){ const el = $('#sync'); if (el) el.textContent = t; }
+(async () => {
+  try {
+    if (!window.claude || !window.claude.use) return;
+    const [db, user] = await Promise.all([claude.use('db'), claude.use('user')]);
+    if (!db || !user) return;
+    const id = await user.id(); if (!id) return;
+    remoteRef = db.collection('data/users/' + id).doc('progress');
+    const snap = await remoteRef.get();
+    if (snap.exists) {
+      const d = snap.data();
+      if (d && d.updatedAt > S.updatedAt) {
+        S = Object.assign(blank(), JSON.parse(d.json));
+        try { localStorage.setItem(KEY, JSON.stringify(S)); } catch(e) {}
+        render();
+      } else if (S.updatedAt > (d && d.updatedAt || 0)) saveNow();
+    } else if (S.updatedAt) saveNow();
+    setSync('Synced to your account');
+  } catch(e) { /* stay local */ }
+})();
+
+// ---------- SQL engine ----------
+let SQLdb = null, engineState = 'idle', engineWaiters = [];
+function loadEngine(){
+  if (engineState !== 'idle') return;
+  engineState = 'loading';
+  const s = document.createElement('script');
+  s.src = 'https://cdn.jsdelivr.net/npm/sql.js@1.10.3/dist/sql-asm.js';
+  s.onload = () => initSqlJs().then(SQL => { SQLdb = new SQL.Database(); SQLdb.exec(buildPracticeSQL()); engineState = 'ready'; engineWaiters.splice(0).forEach(f => f()); })
+                   .catch(() => { engineState = 'failed'; engineWaiters.splice(0).forEach(f => f()); });
+  s.onerror = () => { engineState = 'failed'; engineWaiters.splice(0).forEach(f => f()); };
+  document.head.appendChild(s);
+}
+function whenEngine(fn){ if (engineState === 'ready' || engineState === 'failed') fn(); else { engineWaiters.push(fn); loadEngine(); } }
+function runSQL(sql){
+  const res = SQLdb.exec(sql);
+  if (!res.length) return {columns:[], values:[]};
+  return res[res.length - 1];
+}
+function tableHTML(r){
+  if (!r.columns.length) return '<p class="note info">Query ran. No rows returned.</p>';
+  const head = '<tr>' + r.columns.map(c => '<th>'+esc(c)+'</th>').join('') + '</tr>';
+  const body = r.values.slice(0, 200).map(row => '<tr>' + row.map(v => v === null ? '<td class="null">NULL</td>' : (typeof v === 'number' ? '<td class="num">'+esc(Number.isInteger(v) ? v : Math.round(v*100)/100)+'</td>' : '<td>'+esc(v)+'</td>')).join('') + '</tr>').join('');
+  return '<div class="result"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div><p class="small muted">'+r.values.length+' row'+(r.values.length===1?'':'s')+(r.values.length>200?', showing 200':'')+'</p>';
+}
+function sameVal(a, b){
+  if (a === null || b === null) return a === b;
+  if (typeof a === 'number' && typeof b === 'number') return Math.abs(a - b) < 0.06;
+  if (typeof a === 'number' || typeof b === 'number') return String(a) === String(b) || Math.abs(Number(a) - Number(b)) < 0.06;
+  return String(a) === String(b);
+}
+const rowKey = r => r.map(v => v === null ? '~' : (typeof v === 'number' ? 'n' + Math.round(v) : 's' + v)).join('|');
+function compare(got, want, ordered){
+  if (got.columns.length !== want.columns.length) return {ok:false, msg:'You returned ' + got.columns.length + ' column' + (got.columns.length===1?'':'s') + '. The task expects ' + want.columns.length + '.'};
+  if (got.values.length !== want.values.length) return {ok:false, msg:'You returned ' + got.values.length + ' rows. The task expects ' + want.values.length + '.'};
+  const eqRows = (A, B) => A.every((r, i) => r.every((v, j) => sameVal(v, B[i][j])));
+  if (ordered) {
+    if (eqRows(got.values, want.values)) return {ok:true};
+    const gs = [...got.values].sort((a,b) => rowKey(a) < rowKey(b) ? -1 : 1), ws = [...want.values].sort((a,b) => rowKey(a) < rowKey(b) ? -1 : 1);
+    if (eqRows(gs, ws)) return {ok:false, msg:'Your rows match, but the order does not. Check ORDER BY.'};
+    return {ok:false, msg:'Row count matches, but some values differ. Check filters, joins and column order.'};
+  }
+  const gs = [...got.values].sort((a,b) => rowKey(a) < rowKey(b) ? -1 : 1), ws = [...want.values].sort((a,b) => rowKey(a) < rowKey(b) ? -1 : 1);
+  if (eqRows(gs, ws)) return {ok:true};
+  return {ok:false, msg:'Row count matches, but some values differ. Check filters, joins and column order.'};
+}
+
+// ---------- router ----------
+const ui = { sqlMode:'practice', sqlCat:'All', ex:null, cardCat:'All', cardIdx:0, cardShow:false,
+  iCat:'All', qIdx:0, quiz:null, quizTopic:null, resetAsk:false };
+function route(){ const h = (location.hash || '#sql').slice(1); return ['sql','interview','quiz','progress'].includes(h) ? h : 'sql'; }
+window.addEventListener('hashchange', () => { stopTimer(true); render(); window.scrollTo(0,0); });
+function render(){
+  const r = route();
+  document.querySelectorAll('.tabs a').forEach(a => a.setAttribute('aria-current', a.dataset.tab === r ? 'page' : 'false'));
+  ({sql:renderSQL, interview:renderInterview, quiz:renderQuiz, progress:renderProgress})[r]();
+}
+
+// ---------- SQL views ----------
+const SQL_CATS = ['All','Joins & aggregation','Window functions','CTEs & subqueries'];
+const CARD_CATS = ['All','Joins & aggregation','Window functions','CTEs & subqueries','Performance & theory'];
+const segHTML = (opts, cur, act) => '<div class="seg" role="group">' + opts.map(([k,l]) => '<button data-act="'+act+'" data-v="'+k+'" aria-pressed="'+(k===cur)+'">'+l+'</button>').join('') + '</div>';
+const chipsHTML = (opts, cur, act) => '<div class="chips">' + opts.map(o => '<button class="chip" data-act="'+act+'" data-v="'+esc(o)+'" aria-pressed="'+(o===cur)+'">'+esc(o)+'</button>').join('') + '</div>';
+const KB = ['SELECT','FROM','WHERE','JOIN',' ON ','LEFT JOIN','GROUP BY','HAVING','ORDER BY','DESC','COUNT(*)','SUM()','AVG()','ROUND(, 2)','CASE WHEN  THEN  ELSE  END','OVER ()','PARTITION BY','ROW_NUMBER()','DENSE_RANK()','LAG()','WITH  AS ()','IS NULL','COALESCE()',"strftime('%Y-%m', )",'=',"'completed'",';'];
+
+function renderSQL(){
+  const v = $('#view');
+  let h = '<div><p class="eyebrow">SQL practice</p><h1>Write it, run it, check it</h1></div>';
+  h += segHTML([['practice','Exercises'],['cards','Flashcards'],['sandbox','Sandbox']], ui.sqlMode, 'sqlmode');
+  if (ui.sqlMode === 'practice') h += ui.ex ? exerciseHTML() : exerciseListHTML();
+  else if (ui.sqlMode === 'cards') h += cardsHTML();
+  else h += sandboxHTML();
+  v.innerHTML = h;
+  if (ui.sqlMode === 'practice' && ui.ex) { const ta = $('#ed'); if (ta) ta.addEventListener('input', () => { S.drafts[ui.ex] = ta.value; scheduleSave(); }); }
+  if (ui.sqlMode !== 'cards') loadEngine();
+}
+function exerciseListHTML(){
+  const list = EXERCISES.filter(e => ui.sqlCat === 'All' || e.cat === ui.sqlCat);
+  const solved = EXERCISES.filter(e => S.sqlSolved[e.id]).length;
+  let h = chipsHTML(SQL_CATS, ui.sqlCat, 'sqlcat');
+  h += '<p class="small muted">'+solved+' of '+EXERCISES.length+' solved. Queries run in your browser against a sample marketplace database: dealers, stores, customers, orders and deals.</p>';
+  h += '<div class="list">' + list.map(e => {
+    const st = S.sqlSolved[e.id] ? '<span class="mark done">✓</span>' : (S.sqlPeek[e.id] ? '<span class="mark peek">?</span>' : '<span class="mark"></span>');
+    return '<button class="item" data-act="open-ex" data-v="'+e.id+'">'+st+'<span><span class="t">'+esc(e.title)+'</span><br><span class="s">'+esc(e.cat)+'</span></span><span class="lv" aria-label="level '+e.level+'">'+'●'.repeat(e.level)+'○'.repeat(3-e.level)+'</span></button>';
+  }).join('') + '</div>';
+  return h;
+}
+function exerciseHTML(){
+  const e = EXERCISES.find(x => x.id === ui.ex);
+  const i = EXERCISES.indexOf(e);
+  const draft = S.drafts[e.id] ?? '';
+  let h = '<div class="row spread"><button class="btn ghost" data-act="close-ex">← All exercises</button><span class="pill'+(S.sqlSolved[e.id]?' ok':'')+'">'+(S.sqlSolved[e.id]?'Solved':esc(e.cat))+'</span></div>';
+  h += '<section class="panel"><h2>'+esc(e.title)+'</h2><p class="prompt">'+esc(e.prompt)+'</p>';
+  h += '<details><summary>Tables</summary>' + SCHEMA_DOC.map(t => '<p class="small"><b>'+t[0]+'</b>: <code>'+esc(t[1])+'</code></p>').join('') + '</details></section>';
+  h += '<div class="kbar" aria-label="Insert SQL keyword">' + KB.map(k => '<button data-act="kb" data-v="'+esc(k)+'">'+esc(k.trim())+'</button>').join('') + '</div>';
+  h += '<textarea id="ed" class="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" placeholder="-- write your query here">'+esc(draft)+'</textarea>';
+  h += '<div class="row"><button class="btn" data-act="run">Run</button><button class="btn primary" data-act="check">Check answer</button><button class="btn ghost" data-act="hint">Hint</button><button class="btn ghost" data-act="show-sol">Solution</button></div>';
+  h += '<div id="fb"></div><div id="out"></div><div id="extra"></div>';
+  h += '<div class="row spread"><button class="btn ghost" data-act="ex-step" data-v="-1"'+(i===0?' disabled':'')+'>← Previous</button><button class="btn ghost" data-act="ex-step" data-v="1"'+(i===EXERCISES.length-1?' disabled':'')+'>Next →</button></div>';
+  return h;
+}
+function cardsHTML(){
+  const list = SQL_CARDS.map((c, i) => ({...c, i})).filter(c => ui.cardCat === 'All' || c.cat === ui.cardCat);
+  if (ui.cardIdx >= list.length) ui.cardIdx = 0;
+  const c = list[ui.cardIdx];
+  const known = list.filter(x => S.cards[x.i]).length;
+  let h = chipsHTML(CARD_CATS, ui.cardCat, 'cardcat');
+  h += '<div class="row spread small muted"><span>Card '+(ui.cardIdx+1)+' of '+list.length+'</span><span>'+known+' marked known</span></div>';
+  h += '<section class="panel flash"><p class="eyebrow">'+esc(c.cat)+(S.cards[c.i]?' · known':'')+'</p><p class="q">'+esc(c.q)+'</p>';
+  if (ui.cardShow) h += '<div class="a"><p>'+esc(c.a)+'</p>'+(c.code?'<pre class="code" style="margin-top:10px">'+esc(c.code)+'</pre>':'')+'</div>';
+  h += '</section>';
+  h += ui.cardShow
+    ? '<div class="row"><button class="btn" data-act="card-mark" data-v="0">Review again</button><button class="btn primary" data-act="card-mark" data-v="1">I knew it</button></div>'
+    : '<div class="row"><button class="btn primary" data-act="card-show">Say it out loud, then reveal</button><button class="btn ghost" data-act="card-step">Skip</button></div>';
+  return h;
+}
+function sandboxHTML(){
+  let h = '<section class="panel"><h2>Schema</h2>' + SCHEMA_DOC.map(t => '<div><p><b>'+t[0]+'</b></p><p class="small" style="font-family:var(--mono)">'+esc(t[1])+'</p><p class="small muted">'+esc(t[2])+'</p></div>').join('') + '<p class="small muted">Try EXPLAIN QUERY PLAN before a query to see how SQLite plans it.</p></section>';
+  h += '<div class="kbar">' + KB.map(k => '<button data-act="kb" data-v="'+esc(k)+'">'+esc(k.trim())+'</button>').join('') + '</div>';
+  h += '<textarea id="ed" class="code" spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off">'+esc(S.drafts.__sandbox ?? 'SELECT * FROM orders LIMIT 10;')+'</textarea>';
+  h += '<div class="row"><button class="btn primary" data-act="run">Run</button></div><div id="fb"></div><div id="out"></div>';
+  return h;
+}
+function insertAtCursor(text){
+  const ta = $('#ed'); if (!ta) return;
+  const s = ta.selectionStart ?? ta.value.length, e = ta.selectionEnd ?? s;
+  const needsSpace = s > 0 && !/\s$/.test(ta.value.slice(0, s)) && !/^[ ;,)=]/.test(text) && !/^\(/.test(text);
+  const ins = (needsSpace ? ' ' : '') + text;
+  ta.value = ta.value.slice(0, s) + ins + ta.value.slice(e);
+  let pos = s + ins.length;
+  const g = ins.indexOf('  '), p = ins.indexOf('()'), c = ins.indexOf('(,'), sp = ins.indexOf(', )');
+  if (g >= 0) pos = s + g + 1; else if (p >= 0) pos = s + p + 1; else if (c >= 0) pos = s + c + 1; else if (sp >= 0) pos = s + sp + 2;
+  ta.focus(); ta.setSelectionRange(pos, pos);
+  ta.dispatchEvent(new Event('input'));
+}
+function sqlAction(kind){
+  const ta = $('#ed'), fb = $('#fb'), out = $('#out');
+  const text = ta ? ta.value.trim() : '';
+  if (ui.sqlMode === 'sandbox') { S.drafts.__sandbox = ta.value; scheduleSave(); }
+  if (!text) { fb.innerHTML = '<p class="note warn">Write a query first.</p>'; return; }
+  if (engineState !== 'ready') { fb.innerHTML = '<p class="note info">Loading the SQL engine…</p>'; whenEngine(() => engineState === 'ready' ? sqlAction(kind) : (fb.innerHTML = '<p class="note bad">The SQL engine could not load. Check your connection and reopen the page. Flashcards still work offline.</p>')); return; }
+  let got;
+  try { got = runSQL(text); } catch(err) { fb.innerHTML = '<p class="note bad">'+esc(err.message)+'</p>'; out.innerHTML = ''; return; }
+  out.innerHTML = tableHTML(got);
+  if (kind === 'run') { fb.innerHTML = ''; return; }
+  const e = EXERCISES.find(x => x.id === ui.ex);
+  const want = runSQL(e.solution);
+  const r = compare(got, want, e.ordered);
+  if (r.ok) {
+    const first = !S.sqlSolved[e.id];
+    S.sqlSolved[e.id] = Date.now(); touch();
+    fb.innerHTML = '<p class="note ok">Correct.'+(first?' Marked solved.':'')+'</p>';
+    $('#extra').innerHTML = '<section class="panel"><h3>Why it works</h3><p>'+esc(e.explain)+'</p><details><summary>Reference solution</summary><pre class="code">'+esc(e.solution)+'</pre></details></section>';
+  } else fb.innerHTML = '<p class="note bad">'+esc(r.msg)+'</p>';
+}
+
+// ---------- Interview ----------
+const I_CATS = ['All','Pitch & motivation','Behavioral','Technical explain-it','Case & metrics'];
+const WARN_AT = 90, LIMIT = 120;
+const T = { running:false, start:0, elapsed:0, raf:0, pause:0, pauseTimer:0, done:false, rating:0, lock:null, phaseHint:true };
+function iList(){ return QUESTIONS.map((q, i) => ({...q, i})).filter(q => ui.iCat === 'All' || q.cat === ui.iCat); }
+function renderInterview(){
+  const list = iList();
+  if (ui.qIdx >= list.length) ui.qIdx = 0;
+  const q = list[ui.qIdx];
+  const mine = S.attempts.filter(a => a.q === q.i).slice(-5).reverse();
+  let h = '<div><p class="eyebrow">Timed answers</p><h1>Answer first, then stop</h1></div>';
+  h += chipsHTML(I_CATS, ui.iCat, 'icat');
+  h += '<section class="panel qcard"><div class="row spread"><span class="pill">'+esc(q.cat)+'</span><span class="small muted">'+(ui.qIdx+1)+' / '+list.length+'</span></div><p class="q">'+esc(q.q)+'</p>';
+  h += '<details><summary>What they listen for</summary><p>'+esc(q.test)+'</p></details>';
+  h += '<details><summary>Three-beat skeleton</summary><ol class="beats">'+q.beats.map(b => '<li>'+esc(b)+'</li>').join('')+'</ol></details>';
+  h += '<details><summary>Your material</summary><p>'+esc(q.draw)+'</p></details></section>';
+  h += '<section class="panel" id="timerPanel">' + timerInnerHTML() + '</section>';
+  if (mine.length) h += '<section class="panel"><h3>Your last attempts</h3><div class="hist">'+mine.map(a => '<div><span>'+new Date(a.d).toLocaleDateString(undefined,{month:'short',day:'numeric'})+' · '+['','Rambled','OK','Tight'][a.r||0]+(a.n?' · '+esc(a.n):'')+'</span><b style="color:var(--'+(a.t>LIMIT?'bad':a.t>WARN_AT?'warn':'ok')+')">'+fmt(a.t)+'</b></div>').join('')+'</div></section>';
+  h += '<div class="row spread"><button class="btn ghost" data-act="q-step" data-v="-1">← Previous</button><button class="btn" data-act="q-rand">Random</button><button class="btn ghost" data-act="q-step" data-v="1">Next →</button></div>';
+  $('#view').innerHTML = h;
+  drawDial();
+}
+function timerInnerHTML(){
+  let h = '<div class="dial"><svg viewBox="0 0 200 200" aria-hidden="true"><circle class="ring-track" cx="100" cy="100" r="84" fill="none" stroke-width="14"/>';
+  [[WARN_AT,'90s'],[LIMIT,'2m']].forEach(([s]) => { const a = (s/150)*2*Math.PI - Math.PI/2; h += '<line class="ring-tick" x1="'+(100+70*Math.cos(a))+'" y1="'+(100+70*Math.sin(a))+'" x2="'+(100+98*Math.cos(a))+'" y2="'+(100+98*Math.sin(a))+'" stroke-width="2"/>'; });
+  h += '<circle id="ring" class="ring-fill" cx="100" cy="100" r="84" fill="none" stroke-width="14" stroke-linecap="round" transform="rotate(-90 100 100)" stroke-dasharray="527.8" stroke-dashoffset="527.8"/></svg>';
+  h += '<div class="read"><div class="time" id="tTime">0:00</div><div class="phase" id="tPhase">Ready</div></div></div>';
+  h += '<p class="small muted" style="text-align:center">Tick marks sit at 90 seconds and 2 minutes. Lead with your headline sentence.</p>';
+  if (T.done) {
+    h += '<p style="text-align:center">You spoke for <b>'+fmt(T.elapsed)+'</b>. How did it feel?</p>';
+    h += '<div class="rate">'+['Rambled','OK','Tight'].map((l, k) => '<button data-act="rate" data-v="'+(k+1)+'" aria-pressed="'+(T.rating===k+1)+'">'+l+'</button>').join('')+'</div>';
+    h += '<label class="small muted" for="tNote">Note to self (optional)</label><input id="tNote" class="text" maxlength="120" placeholder="e.g. lost the thread after the Beach Energy part">';
+    h += '<div class="row"><button class="btn primary" data-act="t-save">Save attempt</button><button class="btn ghost" data-act="t-discard">Discard</button></div>';
+  } else if (T.running || T.pause) {
+    h += '<div class="row" style="justify-content:center"><button class="btn primary" data-act="t-stop">Stop</button></div>';
+  } else {
+    h += '<div class="row" style="justify-content:center"><button class="btn primary" data-act="t-start">Start with a 3-second pause</button><button class="btn ghost" data-act="t-now">Start now</button></div>';
+  }
+  return h;
+}
+function drawDial(){
+  const ring = $('#ring'), tt = $('#tTime'), ph = $('#tPhase'); if (!ring) return;
+  const s = T.elapsed;
+  ring.setAttribute('stroke-dashoffset', String(527.8 * (1 - Math.min(s, 150) / 150)));
+  const col = s > LIMIT ? 'var(--bad)' : s > WARN_AT ? 'var(--warn)' : 'var(--ok)';
+  ring.style.stroke = col;
+  tt.textContent = T.pause ? String(T.pause) : fmt(s);
+  ph.style.color = T.pause ? 'var(--accent)' : (T.running || T.done ? col : 'var(--muted)');
+  ph.textContent = T.pause ? 'Breathe in, then begin' : (!T.running && !T.done ? 'Ready' : s > LIMIT ? 'Wrap up now' : s > WARN_AT ? 'Land it' : T.done ? 'Done' : 'On track');
+}
+function tick(){ T.elapsed = (performance.now() - T.start) / 1000; drawDial(); T.raf = requestAnimationFrame(tick); }
+async function startTimer(withPause){
+  T.done = false; T.rating = 0; T.elapsed = 0;
+  try { if (navigator.wakeLock) T.lock = await navigator.wakeLock.request('screen'); } catch(e) { T.lock = null; }
+  if (withPause) {
+    T.pause = 3; $('#timerPanel').innerHTML = timerInnerHTML(); drawDial();
+    T.pauseTimer = setInterval(() => { T.pause--; if (T.pause <= 0) { clearInterval(T.pauseTimer); T.pause = 0; begin(); } else drawDial(); }, 1000);
+  } else begin();
+}
+function begin(){ T.running = true; T.start = performance.now(); $('#timerPanel').innerHTML = timerInnerHTML(); tick(); }
+function stopTimer(silent){
+  clearInterval(T.pauseTimer); cancelAnimationFrame(T.raf);
+  try { T.lock && T.lock.release(); } catch(e) {}
+  T.lock = null;
+  const wasRunning = T.running; T.running = false; T.pause = 0;
+  if (silent) { T.done = false; T.elapsed = 0; return; }
+  T.done = wasRunning && T.elapsed >= 1;
+  if (!T.done) T.elapsed = 0;
+  $('#timerPanel').innerHTML = timerInnerHTML(); drawDial();
+}
+
+// ---------- Quiz ----------
+function shuffle(a){ a = [...a]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function startQuiz(mode){
+  let pool = [];
+  QUIZ_TOPICS.forEach(t => QUIZ[t].forEach((item, i) => pool.push({t, i})));
+  if (mode === 'misses') pool = pool.filter(p => S.misses[p.t + '|' + p.i]);
+  else if (mode !== 'mixed') pool = pool.filter(p => p.t === mode);
+  pool = shuffle(pool).slice(0, 10).map(p => {
+    const [q, opts, ans, why] = QUIZ[p.t][p.i];
+    const order = shuffle(opts.map((o, k) => k));
+    return {...p, q, opts: order.map(k => opts[k]), ans: order.indexOf(ans), why, picked: null};
+  });
+  ui.quiz = {mode, items: pool, at: 0, score: 0};
+  render();
+}
+function renderQuiz(){
+  const v = $('#view');
+  const Z = ui.quiz;
+  if (Z && Z.at < Z.items.length) {
+    const it = Z.items[Z.at];
+    let h = '<div class="row spread"><button class="btn ghost" data-act="quiz-quit">← Topics</button><span class="small muted">'+(Z.at+1)+' of '+Z.items.length+' · '+Z.score+' right</span></div>';
+    h += '<div class="bar"><i style="width:'+(100*Z.at/Z.items.length)+'%"></i></div>';
+    h += '<section class="panel"><span class="pill">'+esc(it.t)+'</span><h2>'+esc(it.q)+'</h2><div class="opts">';
+    h += it.opts.map((o, k) => { let c = 'opt'; if (it.picked !== null) { if (k === it.ans) c += ' right'; else if (k === it.picked) c += ' wrong'; } return '<button class="'+c+'" data-act="pick" data-v="'+k+'"'+(it.picked!==null?' disabled':'')+'>'+esc(o)+'</button>'; }).join('');
+    h += '</div>';
+    if (it.picked !== null) h += '<p class="note '+(it.picked===it.ans?'ok':'bad')+'">'+(it.picked===it.ans?'Right. ':'Not quite. ')+esc(it.why)+'</p><button class="btn primary" data-act="quiz-next">'+(Z.at+1===Z.items.length?'See results':'Next question')+'</button>';
+    h += '</section>';
+    v.innerHTML = h; return;
+  }
+  let h = '<div><p class="eyebrow">Knowledge check</p><h1>Ten questions at a time</h1></div>';
+  if (Z) {
+    const pct = Math.round(100 * Z.score / Math.max(1, Z.items.length));
+    h += '<section class="panel"><h2>'+Z.score+' of '+Z.items.length+' right ('+pct+'%)</h2>';
+    const missed = Z.items.filter(it => it.picked !== it.ans);
+    if (missed.length) h += '<p class="muted">Review these:</p>' + missed.map(it => '<div><p><b>'+esc(it.q)+'</b></p><p class="small">Answer: '+esc(it.opts[it.ans])+'</p></div>').join('');
+    else h += '<p>Clean sweep.</p>';
+    h += '</section>';
+  }
+  const nMiss = Object.keys(S.misses).length;
+  h += '<div class="row"><button class="btn primary" data-act="quiz-start" data-v="mixed">Mixed 10</button><button class="btn" data-act="quiz-start" data-v="misses"'+(nMiss?'':' disabled')+'>Retry misses ('+nMiss+')</button></div>';
+  h += '<div class="list">' + QUIZ_TOPICS.map(t => {
+    const s = S.quiz[t] || {c:0, n:0};
+    const pct = s.n ? Math.round(100 * s.c / s.n) : null;
+    return '<button class="item" data-act="quiz-start" data-v="'+esc(t)+'"><span class="mark'+(pct!==null&&pct>=80?' done':'')+'">'+(pct!==null&&pct>=80?'✓':'')+'</span><span><span class="t">'+esc(t)+'</span><br><span class="s">'+QUIZ[t].length+' questions'+(s.n?' · '+s.n+' answered':'')+'</span></span><span class="pill'+(pct===null?'':pct>=80?' ok':pct>=60?' warn':' bad')+'">'+(pct===null?'New':pct+'%')+'</span></button>';
+  }).join('') + '</div>';
+  v.innerHTML = h;
+}
+
+// ---------- Progress ----------
+function streak(){
+  let n = 0; const d = new Date();
+  if (!S.days[today()]) d.setDate(d.getDate() - 1);
+  for (;;) { const k = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); if (!S.days[k]) break; n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function renderProgress(){
+  const solved = Object.keys(S.sqlSolved).length;
+  const known = Object.keys(S.cards).filter(k => S.cards[k]).length;
+  const att = S.attempts;
+  const recent = att.slice(-20);
+  const avg = recent.length ? recent.reduce((a, b) => a + b.t, 0) / recent.length : 0;
+  const under = recent.length ? Math.round(100 * recent.filter(a => a.t <= LIMIT).length / recent.length) : 0;
+  let qc = 0, qn = 0; Object.values(S.quiz).forEach(s => { qc += s.c; qn += s.n; });
+  let h = '<div><p class="eyebrow">Progress</p><h1>Where you stand</h1></div>';
+  h += '<div class="stats">'
+    + '<div class="stat"><b>'+streak()+'</b><span>day practice streak</span></div>'
+    + '<div class="stat"><b>'+solved+'/'+EXERCISES.length+'</b><span>SQL exercises solved</span></div>'
+    + '<div class="stat"><b>'+att.length+'</b><span>timed answers recorded</span></div>'
+    + '<div class="stat"><b>'+(recent.length?fmt(avg):'–')+'</b><span>average answer, last 20</span></div>'
+    + '<div class="stat"><b>'+(recent.length?under+'%':'–')+'</b><span>answers at 2:00 or less</span></div>'
+    + '<div class="stat"><b>'+(qn?Math.round(100*qc/qn)+'%':'–')+'</b><span>quiz accuracy</span></div>'
+    + '</div>';
+  if (recent.length) {
+    const max = Math.max(150, ...recent.map(a => a.t));
+    const W = 320, H = 120, bw = W / 20;
+    let svg = '<svg viewBox="0 0 '+W+' '+(H+18)+'" style="width:100%;height:auto" role="img" aria-label="Last '+recent.length+' answer lengths">';
+    [[WARN_AT,'warn'],[LIMIT,'bad']].forEach(([s, c]) => { const y = H - H * s / max; svg += '<line x1="0" x2="'+W+'" y1="'+y+'" y2="'+y+'" stroke="var(--'+c+')" stroke-dasharray="4 4" stroke-width="1"/><text x="'+W+'" y="'+(y-3)+'" text-anchor="end" font-size="10" fill="var(--muted)">'+fmt(s)+'</text>'; });
+    recent.forEach((a, k) => { const bh = H * a.t / max; svg += '<rect x="'+(k*bw+2)+'" y="'+(H-bh)+'" width="'+(bw-4)+'" height="'+bh+'" rx="2" fill="var(--'+(a.t>LIMIT?'bad':a.t>WARN_AT?'warn':'ok')+')"/>'; });
+    svg += '<text x="0" y="'+(H+14)+'" font-size="10" fill="var(--muted)">older</text><text x="'+W+'" y="'+(H+14)+'" font-size="10" text-anchor="end" fill="var(--muted)">latest</text></svg>';
+    h += '<section class="panel"><h3>Answer length, last '+recent.length+'</h3>'+svg+'</section>';
+    const byCat = {};
+    att.forEach(a => { const c = QUESTIONS[a.q] && QUESTIONS[a.q].cat; if (!c) return; (byCat[c] = byCat[c] || []).push(a.t); });
+    h += '<section class="panel"><h3>Average time by question type</h3>' + I_CATS.slice(1).map(c => { const arr = byCat[c] || []; const m = arr.length ? arr.reduce((x, y) => x + y, 0) / arr.length : 0; return '<div class="metric"><span>'+esc(c)+'</span><div class="bar"><i style="width:'+Math.min(100, 100*m/150)+'%;background:var(--'+(m>LIMIT?'bad':m>WARN_AT?'warn':'ok')+')"></i></div><em>'+(arr.length?fmt(m):'–')+'</em></div>'; }).join('') + '</section>';
+  }
+  h += '<section class="panel"><h3>Quiz by topic</h3>' + QUIZ_TOPICS.map(t => { const s = S.quiz[t] || {c:0,n:0}; const p = s.n ? Math.round(100*s.c/s.n) : 0; return '<div class="metric"><span>'+esc(t)+'</span><div class="bar"><i style="width:'+p+'%"></i></div><em>'+(s.n?p+'%':'–')+'</em></div>'; }).join('') + '</section>';
+  h += '<section class="panel"><h3>SQL flashcards</h3><div class="metric"><span>Marked known</span><div class="bar"><i style="width:'+(100*known/SQL_CARDS.length)+'%"></i></div><em>'+known+'/'+SQL_CARDS.length+'</em></div></section>';
+  h += '<section class="panel"><p class="small muted">Progress saves to your account when you open this page signed in to Claude, so your phone and computer share it. Otherwise it stays in this browser.</p>';
+  h += ui.resetAsk
+    ? '<p class="note warn">Erase every attempt, score and solved mark?</p><div class="row"><button class="btn" data-act="reset-no">Keep my progress</button><button class="btn" style="color:var(--bad)" data-act="reset-yes">Erase all</button></div>'
+    : '<div><button class="btn ghost" data-act="reset-ask">Reset progress…</button></div>';
+  h += '</section>';
+  $('#view').innerHTML = h;
+}
+
+// ---------- events ----------
+document.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act, v = b.dataset.v;
+  switch (a) {
+    case 'sqlmode': ui.sqlMode = v; renderSQL(); break;
+    case 'sqlcat': ui.sqlCat = v; renderSQL(); break;
+    case 'open-ex': ui.ex = v; renderSQL(); window.scrollTo(0,0); break;
+    case 'close-ex': ui.ex = null; renderSQL(); break;
+    case 'ex-step': { const i = EXERCISES.findIndex(e => e.id === ui.ex) + Number(v); if (EXERCISES[i]) { ui.ex = EXERCISES[i].id; renderSQL(); window.scrollTo(0,0); } break; }
+    case 'kb': insertAtCursor(v); break;
+    case 'run': sqlAction('run'); break;
+    case 'check': sqlAction('check'); break;
+    case 'hint': { const e = EXERCISES.find(x => x.id === ui.ex); $('#fb').innerHTML = '<p class="note info">'+esc(e.hint)+'</p>'; break; }
+    case 'show-sol': { const e = EXERCISES.find(x => x.id === ui.ex); if (!S.sqlSolved[e.id]) { S.sqlPeek[e.id] = true; touch(); }
+      $('#extra').innerHTML = '<section class="panel"><h3>Reference solution</h3><pre class="code">'+esc(e.solution)+'</pre><p>'+esc(e.explain)+'</p><p class="small muted">Close this, wait a minute, and write it again from memory. It counts as solved when Check passes.</p></section>'; break; }
+    case 'cardcat': ui.cardCat = v; ui.cardIdx = 0; ui.cardShow = false; renderSQL(); break;
+    case 'card-show': ui.cardShow = true; renderSQL(); break;
+    case 'card-step': ui.cardIdx++; ui.cardShow = false; renderSQL(); break;
+    case 'card-mark': { const list = SQL_CARDS.map((c, i) => ({...c, i})).filter(c => ui.cardCat === 'All' || c.cat === ui.cardCat); const c = list[ui.cardIdx]; S.cards[c.i] = v === '1'; touch(); ui.cardIdx++; ui.cardShow = false; renderSQL(); break; }
+    case 'icat': stopTimer(true); ui.iCat = v; ui.qIdx = 0; renderInterview(); break;
+    case 'q-step': { stopTimer(true); const n = iList().length; ui.qIdx = (ui.qIdx + Number(v) + n) % n; renderInterview(); break; }
+    case 'q-rand': { stopTimer(true); const n = iList().length; let k; do { k = Math.floor(Math.random() * n); } while (n > 1 && k === ui.qIdx); ui.qIdx = k; renderInterview(); break; }
+    case 't-start': startTimer(true); break;
+    case 't-now': startTimer(false); break;
+    case 't-stop': stopTimer(false); break;
+    case 'rate': T.rating = Number(v); document.querySelectorAll('.rate button').forEach(x => x.setAttribute('aria-pressed', x.dataset.v === v)); break;
+    case 't-save': { const q = iList()[ui.qIdx]; const note = ($('#tNote') || {}).value || '';
+      S.attempts.push({q: q.i, t: Math.round(T.elapsed), r: T.rating, n: note.trim().slice(0, 120), d: Date.now()});
+      if (S.attempts.length > 400) S.attempts = S.attempts.slice(-400);
+      touch(); T.done = false; T.elapsed = 0; renderInterview(); break; }
+    case 't-discard': T.done = false; T.elapsed = 0; $('#timerPanel').innerHTML = timerInnerHTML(); drawDial(); break;
+    case 'quiz-start': startQuiz(v); break;
+    case 'quiz-quit': ui.quiz = null; renderQuiz(); break;
+    case 'pick': { const it = ui.quiz.items[ui.quiz.at]; if (it.picked !== null) break; it.picked = Number(v);
+      const right = it.picked === it.ans; if (right) ui.quiz.score++;
+      const s = S.quiz[it.t] || (S.quiz[it.t] = {c:0, n:0}); s.n++; if (right) s.c++;
+      const key = it.t + '|' + it.i; if (right) delete S.misses[key]; else S.misses[key] = true;
+      touch(); renderQuiz(); break; }
+    case 'quiz-next': ui.quiz.at++; renderQuiz(); window.scrollTo(0,0); break;
+    case 'reset-ask': ui.resetAsk = true; renderProgress(); break;
+    case 'reset-no': ui.resetAsk = false; renderProgress(); break;
+    case 'reset-yes': S = blank(); S.updatedAt = Date.now(); scheduleSave(); ui.resetAsk = false; renderProgress(); break;
+  }
+});
+document.addEventListener('keydown', ev => {
+  if (ev.target.id === 'ed' && (ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') { ev.preventDefault(); sqlAction(ui.sqlMode === 'practice' ? 'check' : 'run'); }
+  if (ev.target.id === 'ed' && ev.key === 'Tab') { ev.preventDefault(); const ta = ev.target, s = ta.selectionStart; ta.value = ta.value.slice(0, s) + '  ' + ta.value.slice(ta.selectionEnd); ta.setSelectionRange(s + 2, s + 2); ta.dispatchEvent(new Event('input')); }
+});
+if (!location.hash) history.replaceState(null, '', '#sql');
+render();
+})();
+</script>
+
+</body>
+</html>
